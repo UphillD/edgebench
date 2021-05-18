@@ -27,7 +27,7 @@ if [ "$1" = "launch" ]; then
 elif [ "$1" = "listen" ]; then
     echo "Launching listener for facenet..."
 
-	if [ "$2" == "0" ]; then
+	if [ "$2" = "0" ]; then
 		input_f="${inputs}/facenet/"
 		output_f="${outputs}/facenet/"
 		temp_f="${temps}/"$(tr -dc A-Za-z0-9 </dev/urandom | head -c 6 ; echo '')".tmp"
