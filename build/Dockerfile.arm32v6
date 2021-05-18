@@ -1,0 +1,41 @@
+# Pull base image
+FROM raspbian/stretch
+
+# Set label(s)
+LABEL maintainer "akarteris21@gmail.com"
+
+# Set working directory
+WORKDIR /app
+
+# Install python 3.5 and utils
+RUN apt-get update \
+ &&	apt-get install -y --no-install-recommends \
+	python2.7 python-pip python-setuptools \
+	python-numpy python-scipy \
+	python3.5 python3-pip python3-setuptools \
+	libatlas3-base libgfortran3 \
+	libwebp6 libtiff5 libilmbase12 libopenexr22 libgstreamer1.0-0 \
+	libavcodec57 libavformat57 libswscale4 libqtgui4 libqt4-test \
+	libjasper1 \
+	unzip wget \
+ &&	apt-get clean \
+ &&	rm -rf /var/lib/apt/lists/*
+
+# Install theano
+RUN pip2 install theano==1.0.4 --no-cache-dir
+
+# Install tensorflow and opencv separately (required for armv6)
+RUN wget -nv -O "tensorflow-1.11.0-cp35-none-linux_armv7l.whl" https://piwheels.org/simple/tensorflow/tensorflow-1.11.0-cp35-none-linux_armv6l.whl \
+ && wget -nv -O "opencv_python-4.0.1.24-cp35-cp35m-linux_armv7l.whl" https://piwheels.org/simple/opencv-python/opencv_python-4.0.1.24-cp35-cp35m-linux_armv6l.whl \
+ && pip3 install numpy==1.15.1 tensorflow-1.11.0-cp35-none-linux_armv7l.whl opencv_python-4.0.1.24-cp35-cp35m-linux_armv7l.whl --no-cache-dir --extra-index-url https://piwheels.org/simple \
+ &&	rm -rf tensorflow-1.11.0-cp35-none-linux_armv7l.whl opencv_python-4.0.1.24-cp35-cp35m-linux_armv7l.whl
+
+# Install deepspeech
+RUN pip3 install deepspeech --no-cache-dir
+
+# Install python requirements
+COPY build/requirements.arm32v6.txt .
+RUN pip3 install -r requirements.arm32v6.txt --no-cache-dir --extra-index-url https://piwheels.org/simple
+
+# Set entrypoint
+ENTRYPOINT ["/app/entrypoint.sh"]

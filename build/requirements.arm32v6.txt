@@ -1,0 +1,14 @@
+easydict==1.9
+glog==0.3.1
+h5py
+loguru
+matplotlib==3.0.2
+paho-mqtt
+Pillow
+psutil
+pyyaml
+requests
+scipy==0.19.1
+scikit-learn==0.21.1
+tabulate
+tqdm==4.28.1
