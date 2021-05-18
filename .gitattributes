@@ -1,0 +1,2 @@
+# Classify all dockerfiles properly
+Dockerfile.* linguist-language=Dockerfile
