@@ -9,7 +9,7 @@ source /app/apps/settings.cfg
 echo "Removing inputs"
 rm -rf "${inputs}/deepspeech/payload.wav"
 rm -rf "${inputs}/facenet/payload.jpg"
-rm -rf "${inputs}/lanenet/payload.jpg"*
+rm -rf "${inputs}/lanenet/payload.jpg"
 rm -rf "${inputs}/retain/payload."*
 
 echo "Removing outputs"
