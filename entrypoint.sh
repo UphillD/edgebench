@@ -2,13 +2,14 @@
 # Docker image entrypoint
 # This should be called from within the image
 
-# Grab the platform name passed on by the docker image launcher
+# Grab the execution platform passed on by the docker image launcher
 platform="$1"
 
 # Source the config file
 source /app/apps/settings.cfg
 
 # Create the necessary folders in case they don't exist
+# Yeah, it's a bash function, laugh all you want
 create_dirs () {
 	# Create input dirs
 	mkdir -p "${inputs}/deepspeech"
@@ -28,46 +29,42 @@ create_dirs () {
 
 
 if [ "$2" = "listen" ]; then
-
-	create_dirs
-	
+	create_dirs	
 	# Indicate app & app id
 	app="$3"
 	id="$4"
 	
 	source "${appdir}/${app}/entrypoint.sh" "listen" "$id"
-
-
-
 elif [ "$2" = "custodian" ]; then
-	cd "$algodir"
-	python3 "${algodir}/custodian.py" "$platform" "$3"
-
-elif [ "$2" = "local" ]; then
-	cd "$sgrm"
-	python3 "${sgrm}/local.py" "$3"
+	combination="$3"
 	
-elif [ "$2" = "gateway" ]; then
-	cd "$sgrm"
-	python3 "${sgrm}/gateway.py" "$3"
-
-elif [ "$2" = "arbiter" ]; then
-	cd "$sgrm"
-	python3 "${sgrm}/arbiter.py"
+	cd "$algodir"
+	python3 "${algodir}/custodian.py" "$platform" "$combination"
 	
 elif [ "$2" = "spawner" ]; then
-	cd "$sgrm"
-	python3 "${algodir}/spawner.py"
+	task_number="$3"
+	
+	cd "$algodir"
+	python3 "${algodir}/spawner.py" "$task_number"
 
-
+elif [ "$2" = "device" ]; then
+	algorithm="$3"
+	device_id="$4"
+	
+	cd "$algorithm"
+	python3 "${algorithm}/device.py" "$device_id"
+	
+elif [ "$2" = "gateway" ]; then
+	algorithm="$3"
+	gateway_id="$4"
+	
+	cd "$algorithm"
+	python3 "${algorithm}/gateway.py" "$gateway_id"
 
 # Interactive menu
-###
-### WIP
-###
 elif [ "$2" = "launch" ]; then
 	# Print edgebench banner
-	source "${helperdir}"/print_banner.sh edgebench
+	source "${helpers}/print_banner.sh" "edgebench"
 	
 	# Create the directories
 	create_dirs
@@ -78,82 +75,76 @@ elif [ "$2" = "launch" ]; then
 	echo "[2] Launch an app listener"
 	echo "[3] Launch a Custodian"
 	echo "[4] Launch a Spawner"
-	echo "[5] Launch an SGRM module"
-	echo "[6] Launch an Oracle module (WIP)"
+	echo "[5] Launch a device module"
+	echo "[6] Launch a gateway module"
 	echo "[8] Download models"
 	echo "[9] Cleanup"
-	read -n1 -p "Enter your selection [1, 2, 3, 4, 5, 6, 8, 9]:" opt1
+	read -n1 -p "Enter your selection [1, 2, 3, 4, 5, 6, 8, 9]:" command
 	echo
 
-	if [ "$opt1" = "1" ] || [ "$opt1" = "2" ]; then
+	if [ "$command" = "1" ] || [ "$command" = "2" ]; then
 		echo
 		echo "Select an app:"
 		echo "[1] deepspeech"
 		echo "[2] facenet"
 		echo "[3] lanenet"
 		echo "[4] retain"
-		read -n1 -p "Enter your selection [1, 2, 3, 4]:" opt2
+		read -n1 -p "Enter your selection [1, 2, 3, 4]:" option
 		echo
 		
-		case "$opt2" in
+		case "$option" in
 			"1") app="deepspeech" ;;
 			"2") app="facenet" ;;
 			"3") app="lanenet" ;;
 			"4") app="retain" ;;
 		esac
-	
-	elif [ "$opt1" = "3" ]; then
+	elif [ "$command" = "3" ]; then
 		echo
-		read -n7 -p "Enter your app combo:" opt2
+		read -p "Enter your app combo in the form of a,b,c,d:" combination
 		echo
-	
-	elif [ "$opt1" = "5" ]; then
+	elif [ "$command" = "4" ]; then
 		echo
-		echo "Select a module:"
-		echo "[1] local"
-		echo "[2] gateway"
-		echo "[3] arbiter"
-		read -n1 -p "Enter your selection [1, 2, 3]:" opt2
+		read -p "Enter the number of tasks you want to spawn:" task_number
 		echo
-		
-		if [ "$opt2" = "1" ]; then
-			read -n1 -p "Enter your device id:" opt3
-		elif [ "$opt2" = "2" ]; then
-			read -n1 -p "Enter your gateway id:" opt3
-		fi
-		
-		case "$opt2" in
-			"1") module="local" ;;
-			"2") module="gateway" ;;
-			"3") module="arbiter" ;;
+	elif [ "$command" = "5" ]; then
+		echo
+		echo "Select an algorithm:"
+		echo "[1] SGRM"
+		echo "[2] Oracle"
+		echo "[3] NoOffload"
+		read -n1 -p "Enter your selection [1, 2, 3]:" option
+		echo
+		case "$option" in
+			"1") algorithm="SGRM" ;;
+			"2") algorithm="Oracle" ;;
+			"3") algorithm="NoOffload" ;;
 		esac
-		
-	elif [ "$opt1" = "6" ]; then
+		read -n1 -p "Enter your device id:" device_id
 		echo
-		echo "Select a module:"
-		echo "[1] local"
-		echo "[2] gateway"
-		read -n1 -p "Enter your selection [1, 2]:" opt2
+	elif [ "$command" = "6" ]; then
 		echo
-		
+		echo "Select an algorithm:"
+		echo "[1] SGRM"
+		echo "[2] Oracle"
+		read -n1 -p "Enter your selection [1, 2]:" option
+		echo
 		case "$opt2" in
-			"1") module="local" ;;
-			"2") module="gateway" ;;
+			"1") algorithm="SGRM" ;;
+			"2") algorithm="Oracle" ;;
 		esac
+		read -n1 -p "Enter your gateway id:" gateway_id
+		echo
 	fi
-
-#	case "$opt1" in
-#		"1") source "${appdir}/${app}/entrypoint.sh" "launch" ;;
-#		"2") source "${appdir}/${app}/entrypoint.sh" "listen" ;;
-#		"3") python3 "${algodir}/custodian.py" "$platform" "$opt2";;
-#		"4") python3 "${algodir}/spawner.py" ;;
-#		"5") python3 "${sgrm}/${module}.py" ;;
-#		"6")
-#		"8") source "/app/helpers/get_models.sh" ;;
-#		"9") source "/app/helpers/clean_all.sh" ;;
-#		*)   echo "Please enter a valid selection" ;;
-#	esac
-
-
-
+	
+	case "$command" in
+		"1") source "${appdir}/${app}/entrypoint.sh" "launch" ;;
+		"2") source "${appdir}/${app}/entrypoint.sh" "listen" ;;
+		"3") python3 "${algodir}/custodian.py" "$platform" "$combination" ;;
+		"4") python3 "${algodir}/spawner.py" "$task_number" ;;
+		"5") python3 "${algodir}/${algorithm}/device.py" "$device_id" ;;
+		"6") python3 "${algodir}/${algorithm}/gateway.py" "$gateway_id" ;;
+		"8") source "${helpers}/get_models.sh" ;;
+		"9") source "${helpers}/clean_all.sh" ;;
+		*)   echo "Please enter a valid selection!" ;;
+	esac
 fi
