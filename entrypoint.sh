@@ -9,7 +9,7 @@ platform="$1"
 source /app/apps/settings.cfg
 
 # Create the necessary folders in case they don't exist
-# Yeah, it's a bash function, laugh all you want
+# Yeah, it's a bash function, laugh away
 create_dirs () {
 	# Create input dirs
 	mkdir -p "${inputs}/deepspeech"
@@ -27,10 +27,11 @@ create_dirs () {
 }
 
 
-
+###
+# Calls /w arguments
+###
 if [ "$2" = "listen" ]; then
 	create_dirs	
-	# Indicate app & app id
 	app="$3"
 	id="$4"
 	
@@ -61,8 +62,10 @@ elif [ "$2" = "gateway" ]; then
 	cd "$algorithm"
 	python3 "${algorithm}/gateway.py" "$gateway_id"
 
+###
 # Interactive menu
-elif [ "$2" = "launch" ]; then
+###
+elif [ $# -eq 1 ]; then
 	# Print edgebench banner
 	source "${helpers}/print_banner.sh" "edgebench"
 	
@@ -77,9 +80,10 @@ elif [ "$2" = "launch" ]; then
 	echo "[4] Launch a Spawner"
 	echo "[5] Launch a device module"
 	echo "[6] Launch a gateway module"
-	echo "[8] Download models"
+	echo "[7] Download models"
+	echo "[8] Download payloads"
 	echo "[9] Cleanup"
-	read -n1 -p "Enter your selection [1, 2, 3, 4, 5, 6, 8, 9]:" command
+	read -n1 -p "Enter your selection [1 - 9]:" command
 	echo
 
 	if [ "$command" = "1" ] || [ "$command" = "2" ]; then
@@ -143,8 +147,9 @@ elif [ "$2" = "launch" ]; then
 		"4") python3 "${algodir}/spawner.py" "$task_number" ;;
 		"5") python3 "${algodir}/${algorithm}/device.py" "$device_id" ;;
 		"6") python3 "${algodir}/${algorithm}/gateway.py" "$gateway_id" ;;
-		"8") source "${helpers}/get_models.sh" ;;
-		"9") source "${helpers}/clean_all.sh" ;;
+		"7") source "${scripts}/get_models.sh" ;;
+		"8") source "${scripts}/get_payloads.sh" ;;
+		"9") source "${scripts}/clean_all.sh" ;;
 		*)   echo "Please enter a valid selection!" ;;
 	esac
 fi
