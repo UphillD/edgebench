@@ -2,7 +2,7 @@
 
 ##
 
-A collection of machine learning applications, utilized as use-cases for the resource management algorithm that I am developing for my bachelor thesis.
+A collection of machine learning applications, properly configured for docker deployment and utilized as use-cases for the resource management algorithm that I am developing for my bachelor thesis.
 
 ![arch: arm32v6](arch-arm32v6-blue.svg)
 ![arch: arm32v7](arch-arm32v7-blue.svg)
@@ -22,31 +22,34 @@ A collection of machine learning applications, utilized as use-cases for the res
 
 ## The Applications
 
-[DeepSpeech](https://github.com/mozilla/DeepSpeech), an embedded speech-to-text engine using Tensorflow
-
-[FaceNet](https://github.com/davidsandberg/facenet), a face recognizer using Tensorflow
-
-[LaneNet](https://github.com/MaybeShewill-CV/lanenet-lane-detection), a deep neural network for real time lane detection using Tensorflow
-
-[RETAIN](https://github.com/mp2893/retain), an interpretable predictive model for healthcare applications using Theano
+* [DeepSpeech](https://github.com/mozilla/DeepSpeech), an embedded speech-to-text engine using Tensorflow
+* [FaceNet](https://github.com/davidsandberg/facenet), a face recognizer using Tensorflow
+* [LaneNet](https://github.com/MaybeShewill-CV/lanenet-lane-detection), a deep neural network for real time lane detection using Tensorflow
+* [RETAIN](https://github.com/mp2893/retain), an interpretable predictive model for healthcare applications using Theano
 
 ## Docker Image
 
-A docker image is utilized for easy & fast deployment on different platforms.
+A docker image is utilized for easy & fast deployment on different platforms: [Docker Repository](https://hub.docker.com/repository/docker/uphilld/edgebench)
 
-[Docker image repo](https://hub.docker.com/repository/docker/uphilld/edgebench)
+Pull it with `docker pull uphilld/edgebench:<platform>` or let the launcher do it for you!
 
-Currently supported platforms: amd64, arm32v6, arm32v7, arm64v8
+Currently supported platforms: `arm32v6`, `arm32v7`, `arm64v8`, `amd64`
 
 ## Usage
 
-Either run the launcher without arguments (`./launcher.sh`) for an interactive menu,
-or run the launcher with the proper arguments (see the file comments for more info).
+1. Clone the repo:	`git clone https://github.com/uphilld/edgebench.git`
+2. Pull the latest docker image: `docker pull uphilld/edgebench:<platform>`
+3. Use the launcher to download the models and payloads
+4. Start the launcher:
+
+__Interactive menu:__ `./launcher.sh`
+
+__Direct call:__ `./launcher.sh <command> <arguments>`
 
 ## Project Tree
 
     $root
-    ├ algo
+    ├ 🔒 algo
     ├ apps
     ├    ├ deepspeech
     ├    ├ facenet

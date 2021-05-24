@@ -8,7 +8,7 @@ source /app/apps/settings.cfg
 cd "${appdir}/facenet"
 
 # Print banner
-source "${helpers}/print_banner.sh" "facenet"
+source "${scripts}/print_banner.sh" "facenet"
 
 
 
@@ -22,6 +22,8 @@ if [ "$1" = "launch" ]; then
 										"${outputs}/facenet/" \
 										"${temp_f}"
 	rm -f "${inputs}/facenet/payload.jpg"
+
+
 
 # Launch listener
 elif [ "$1" = "listen" ]; then

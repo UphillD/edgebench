@@ -8,7 +8,7 @@ source /app/apps/settings.cfg
 cd "${appdir}/deepspeech"
 
 # Print banner
-source "${helpers}/print_banner.sh" "deepspeech"
+source "${scripts}/print_banner.sh" "deepspeech"
 
 # Set appropriate model depending on architecture
 # note that the variable "$platform" is passed on 

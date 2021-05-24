@@ -8,6 +8,9 @@ platform="$1"
 # Source the config file
 source /app/apps/settings.cfg
 
+# Set permissions
+chmod -R 777 *
+
 # Create the necessary folders in case they don't exist
 # Yeah, it's a bash function, laugh away
 create_dirs () {
@@ -67,7 +70,7 @@ elif [ "$2" = "gateway" ]; then
 ###
 elif [ $# -eq 1 ]; then
 	# Print edgebench banner
-	source "${helpers}/print_banner.sh" "edgebench"
+	source "${scripts}/print_banner.sh" "edgebench"
 	
 	# Create the directories
 	create_dirs

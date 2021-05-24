@@ -8,7 +8,7 @@ source /app/apps/settings.cfg
 cd "${appdir}/lanenet"
 
 # Print banner
-source "${helpers}/print_banner.sh" "lanenet"
+source "${scripts}/print_banner.sh" "lanenet"
 
 
 
@@ -23,6 +23,8 @@ if [ "$1" = "launch" ]; then
 							--temp_file "${temp_f}"
 	
 	rm -f "${inputs}/lanenet/payload.jpg"
+
+
 
 # Launch listener
 elif [ "$1" = "listen" ]; then

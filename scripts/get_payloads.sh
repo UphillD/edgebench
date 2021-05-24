@@ -8,19 +8,17 @@ echo
 echo "Downloading pretrained models..."
 echo
 
-for app in $apps; do
-    if [ ! -d "${payloads}" ]; then
-        echo "Downloading payloads..."
-        echo
-        wget "${payload_all}" && \
-        mkdir -p "${payloads}" && \
-        unzip -qq "payloads_all.zip" -d "${payloads}" && \
-        rm -rf "payloads_all.zip"
-    else
-		echo "Payloads already exist, skipping ..."
-		echo
-	fi
-done
+if [ ! -d "${payloads}" ]; then
+    echo "Downloading payloads..."
+    echo
+    wget "${payload_all}" && \
+    mkdir -p "${payloads}" && \
+    unzip -qq "payloads.zip" -d "${payloads}" && \
+    rm -rf "payloads.zip"
+else
+	echo "Payloads already exist, skipping ..."
+	echo
+fi
 
 echo "Payloads ready."
 echo

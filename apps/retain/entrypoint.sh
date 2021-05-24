@@ -8,7 +8,7 @@ source /app/apps/settings.cfg
 cd "${appdir}/retain"
 
 # Print banner
-source "${helpers}/print_banner.sh" "retain"
+source "${scripts}/print_banner.sh" "retain"
 
 
 
@@ -26,6 +26,8 @@ if [ "$1" = "launch" ]; then
 									"${outputs}/retain/result.txt"
 	rm -rf "${inputs}/retain/payload."*
 	rm -f "${temp_f}"
+
+
 
 # Launch listener
 elif [ "$1" = "listen" ]; then

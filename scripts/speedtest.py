@@ -1,3 +1,6 @@
+# Small test to get current bandwidth between devices
+# Call with pub on one device and sub on the other
+# Doesn't need the docker image
 from paho.mqtt import publish, subscribe
 from sys import argv
 from time import time, sleep
