@@ -2,7 +2,7 @@
 
 ##
 
-A collection of machine learning applications, properly configured for docker deployment and utilized as use-cases for the resource management algorithm that I am developing for my bachelor thesis.
+A collection of heterogenous machine learning applications employed as use-cases for the resource management algorithm I am developing for my bachelor thesis.
 
 ![arch: arm32v6](arch-arm32v6-blue.svg)
 ![arch: arm32v7](arch-arm32v7-blue.svg)
@@ -65,7 +65,7 @@ __Direct call:__ `./launcher.sh <command> <arguments>`
 
 The algo folder is omitted for obvious reasons.
 
-The data folder is also omitted, models and payloads can be downloaded by entering the corresponding selection on the menu.
+The data folder is also omitted, models and payloads can be downloaded via the corresponding selection on the menu.
 
 ## Miscellaneous
 
