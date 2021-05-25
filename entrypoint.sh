@@ -55,16 +55,21 @@ elif [ "$2" = "device" ]; then
 	algorithm="$3"
 	device_id="$4"
 	
-	cd "$algorithm"
-	python3 "${algorithm}/device.py" "$device_id"
+	cd "${algodir}/${algorithm}"
+	python3 "${algodir}/${algorithm}/device.py" "$platform" "$device_id"
 	
 elif [ "$2" = "gateway" ]; then
 	algorithm="$3"
 	gateway_id="$4"
 	
-	cd "$algorithm"
-	python3 "${algorithm}/gateway.py" "$gateway_id"
+	cd "${algodir}/${algorithm}"
+	python3 "${algodir}/${algorithm}/gateway.py" "$platform" "$gateway_id"
 
+elif [ "$2" = "logger" ]; then
+	
+	cd "${algodir}/${algorithm}"
+	python3 "${algodir}/${algorithm}/logger.py"
+	
 ###
 # Interactive menu
 ###
