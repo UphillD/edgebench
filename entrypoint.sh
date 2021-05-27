@@ -69,7 +69,12 @@ elif [ "$2" = "logger" ]; then
 	
 	cd "${algodir}/${algorithm}"
 	python3 "${algodir}/${algorithm}/logger.py"
-	
+
+elif [ "$2" = "get_models" ]; then
+	source "${scripts}/get_models.sh"
+elif [ "$2" = "get_payloads" ]; then
+	source "${scripts}/get_payloads.sh" ;;
+
 ###
 # Interactive menu
 ###

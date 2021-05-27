@@ -16,9 +16,10 @@ A collection of heterogenous machine learning applications employed as use-cases
 
 1. [The Applications](#The-Applications)
 2. [Docker image](#Docker-Image)
-3. [Usage](#Usage)
-4. [Project Tree](#Project-Tree)
-5. [Miscellaneous](#Miscellaneous)
+3. [Setup](#Setup)
+4. [Usage](#Usage)
+5. [Project Tree](#Project-Tree)
+6. [Miscellaneous](#Miscellaneous)
 
 ## The Applications
 
@@ -34,6 +35,12 @@ A docker image is utilized for easy & fast deployment on different platforms: [D
 Pull it with `docker pull uphilld/edgebench:<platform>` or let the launcher do it for you!
 
 Currently supported platforms: `arm32v6`, `arm32v7`, `arm64v8`, `amd64`
+
+## Setup
+
+Run the following command:
+
+`git clone https://github.com/UphillD/edgebench.git && cd edgebench && git clone https://github.com/UphillD/edgebench.algos.git && ./scripts/get_docker_image.sh && ./launcher.sh get_models && ./launcher.sh get_payloads`
 
 ## Usage
 
