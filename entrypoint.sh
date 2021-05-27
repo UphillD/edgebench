@@ -74,6 +74,8 @@ elif [ "$2" = "get_models" ]; then
 	source "${scripts}/get_models.sh"
 elif [ "$2" = "get_payloads" ]; then
 	source "${scripts}/get_payloads.sh"
+elif [ "$2" = "get_face_db" ]; then
+	source "${scripts}/get_face_db.sh"
 
 ###
 # Interactive menu
