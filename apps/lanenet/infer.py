@@ -40,11 +40,12 @@ def init_args():
 	parser.add_argument('--weights_path', type=str, help='The model weights path')
 	parser.add_argument('--save_dir', type=str, help='The test output save root dir')
 	parser.add_argument('--temp_file', type=str, help='The temporary file')
+	parser.add_argument('--loop', type=str, help='Set to true for infinite operation')
 
 	return parser.parse_args()
 
 
-def eval_lanenet(src_dir, weights_path, save_dir, temp_file):
+def eval_lanenet(src_dir, weights_path, save_dir, temp_file, loop):
 	"""
 
 	:param src_dir:
@@ -141,7 +142,8 @@ def eval_lanenet(src_dir, weights_path, save_dir, temp_file):
 					
 					print('Image inferred in: {:.3f}s'.format(t_total))
 					
-					os.remove(image_path)
+					if loop == 'False':
+						os.remove(image_path)
 					os.remove(output_image_path)
 					os.remove(temp_file)
 					
@@ -164,5 +166,6 @@ if __name__ == '__main__':
 		src_dir=args.image_dir,
 		weights_path=args.weights_path,
 		save_dir=args.save_dir,
-		temp_file=args.temp_file
+		temp_file=args.temp_file,
+		loop=args.loop
 	)

@@ -1,8 +1,9 @@
 #!/bin/bash
+# edgebench - launcher.sh
 # Docker image entrypoint
 # This should be called from within the image
 
-# Grab the execution platform passed on by the docker image launcher
+# Grab the execution platform passed on by the launcher
 platform="$1"
 
 # Source the config file
@@ -39,6 +40,13 @@ if [ "$2" = "listen" ]; then
 	id="$4"
 	
 	source "${appdir}/${app}/entrypoint.sh" "listen" "$id"
+	
+elif [ "$2" = "loop" ]; then
+	create_dirs	
+	app="$3"
+	id="$4"
+	
+	source "${appdir}/${app}/entrypoint.sh" "loop" "$id"
 elif [ "$2" = "custodian" ]; then
 	combination="$3"
 	
@@ -69,13 +77,12 @@ elif [ "$2" = "logger" ]; then
 	
 	cd "${algodir}/${algorithm}"
 	python3 "${algodir}/${algorithm}/logger.py"
-
-elif [ "$2" = "get_models" ]; then
+	
+elif [ "$2" = "prepare" ]; then
 	source "${scripts}/get_models.sh"
-elif [ "$2" = "get_payloads" ]; then
 	source "${scripts}/get_payloads.sh"
-elif [ "$2" = "get_face_db" ]; then
 	source "${scripts}/get_face_db.sh"
+
 
 ###
 # Interactive menu
@@ -95,12 +102,12 @@ elif [ $# -eq 1 ]; then
 	echo "[4] Launch a Spawner"
 	echo "[5] Launch a device module"
 	echo "[6] Launch a gateway module"
-	echo "[7] Download models"
-	echo "[8] Download payloads"
-	echo "[9] Cleanup"
-	read -n1 -p "Enter your selection [1 - 9]:" command
+	echo "[7] Prepare models, payloads & face database"
+	echo "[0] Cleanup"
+	read -n1 -p "Enter your selection [0 - 7]:" command
 	echo
 
+	# Command specific settings
 	if [ "$command" = "1" ] || [ "$command" = "2" ]; then
 		echo
 		echo "Select an app:"
@@ -162,9 +169,10 @@ elif [ $# -eq 1 ]; then
 		"4") python3 "${algodir}/spawner.py" "$task_number" ;;
 		"5") python3 "${algodir}/${algorithm}/device.py" "$device_id" ;;
 		"6") python3 "${algodir}/${algorithm}/gateway.py" "$gateway_id" ;;
-		"7") source "${scripts}/get_models.sh" ;;
-		"8") source "${scripts}/get_payloads.sh" ;;
-		"9") source "${scripts}/clean_all.sh" ;;
+		"7") source "${scripts}/get_models.sh"
+			 source "${scripts}/get_payloads.sh"
+			 source "${scripts}/get_face_db.sh" ;;
+		"0") source "${scripts}/clean_all.sh" ;;
 		*)   echo "Please enter a valid selection!" ;;
 	esac
 fi

@@ -45,5 +45,31 @@ elif [ "$1" = "listen" ]; then
 	time python3.7 infer.py	--image_dir "${input_f}/" \
 							--weights_path "${models}/lanenet/tusimple_lanenet.ckpt" \
 							--save_dir "${output_f}" \
-							--temp_file "${temp_f}"
+							--temp_file "${temp_f}" \
+							--loop "False"
+							
+
+# Launch listener
+elif [ "$1" = "loop" ]; then
+    echo "Launching listener for lanenet..."
+    
+    
+	if [ "$2" = "0" ]; then
+		input_f="${inputs}/lanenet"
+		output_f="${outputs}/lanenet"
+		temp_f="${temps}/"$(tr -dc A-Za-z0-9 </dev/urandom | head -c 6 ; echo '')".tmp"
+	else
+		mkdir -p "${workdir}/app_${2}"
+		chmod -R 777 "${workdir}/app_${2}"
+		input_f="${workdir}/app_${2}"
+		output_f="${workdir}/app_${2}"
+		temp_f="${workdir}/app_${2}/exec.tmp"
+    fi
+    
+	cp "${payloads}/lanenet/payload.jpg" "${input_f}/payload.jpg"
+	time python3.7 infer.py	--image_dir "${input_f}/" \
+							--weights_path "${models}/lanenet/tusimple_lanenet.ckpt" \
+							--save_dir "${output_f}" \
+							--temp_file "${temp_f}" \
+							--loop "True"
 fi

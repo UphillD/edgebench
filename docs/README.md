@@ -1,4 +1,4 @@
-![edgebench logo](logo.png)
+w![edgebench logo](logo.png)
 
 ##
 
@@ -40,7 +40,7 @@ Currently supported platforms: `arm32v6`, `arm32v7`, `arm64v8`, `amd64`
 
 Run the following command:
 
-`git clone https://github.com/UphillD/edgebench.git && cd edgebench && git clone https://github.com/UphillD/edgebench.algos.git ./algo && ./launcher.sh get_models && ./launcher.sh get_payloads`
+`git clone https://github.com/UphillD/edgebench && cd edgebench && git clone https://github.com/UphillD/edgebench.algos algo && ./launcher.sh prepare`
 
 ## Usage
 

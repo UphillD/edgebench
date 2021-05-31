@@ -1,9 +1,10 @@
 #!/bin/bash
+# edgebench - launcher.sh
 # Launches the docker image
 
-## Get & Set the execution platform
+# Get & Set the execution platform
 # We set this in order to pull the correct docker tag
-# and pass it inside the docker container
+# and pass it through to the docker container
 # (it misbehaves when checked from inside)
 if   [ "$(uname -m)" = "x86_64"  ]; then
 	platform="amd64"
@@ -20,6 +21,7 @@ fi
 # Possible invocations:
 #    interactive menu (no arguments)
 #    listen <app> <id>
+#    loop <app> <id>
 #    custodian <app combination>
 #    spawner <number of tasks>
 #    device <algorithm> <device id>
@@ -28,7 +30,7 @@ fi
 # Parameters:
 #   -it: make the shell interactive
 #   -v:  mount the current dir
-#   -t:  pull the appropriate tag
+#   -t:  set the appropriate tag
 #
 if [ $# -eq 0 ]; then
 	docker run -it -v $PWD:/app -t uphilld/edgebench:"$platform" "$platform"

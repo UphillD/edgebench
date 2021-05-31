@@ -105,8 +105,10 @@ def main(args):
                         print('Match not found!')
                     print('')
                     
-                    for filename in os.listdir(args.data_dir):
-                        os.remove(args.data_dir + "/" + filename)
+                    if args.loop == 'False':
+                        for filename in os.listdir(args.data_dir):
+                            os.remove(args.data_dir + "/" + filename)
+                    os.remove(args.data_dir + '/exec.tmp')
                     
                     print('Ready to infer!')
 
@@ -173,6 +175,8 @@ def parse_arguments(argv):
                         help='The output directory where the image clusters will be saved.')
     parser.add_argument('temp_file', type=str,
                         help='The temporary file.')
+    parser.add_argument('loop', type=str,
+						help='Set to True for infinite operation.')
     parser.add_argument('--image_size', type=int,
                         help='Image size (height, width) in pixels.', default=160)
     parser.add_argument('--margin', type=int,

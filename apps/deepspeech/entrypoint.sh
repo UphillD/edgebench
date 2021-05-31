@@ -80,5 +80,48 @@ elif [ "$1" = "listen" ]; then
 			rm -f "${temp_f}"
 		fi
 	done
+	
+	
+# Launch looper
+elif [ "$1" = "loop" ]; then
+	echo "Launching listener for deepspeech..."
+	
+	# If no appid is set, use defaults
+	if [ "$2" = "0" ]; then
+		input_f="${inputs}/deepspeech/payload.wav"
+		output_f="${outputs}/deepspeech/transcript.txt"
+		temp_f="${temps}/"$(tr -dc A-Za-z0-9 </dev/urandom | head -c 6 ; echo '')".tmp"
+	# otherwise, use the appid
+	else
+		mkdir -p "${workdir}/app_${2}"
+		chmod -R 777 "${workdir}/app_${2}"
+		input_f="${workdir}/app_${2}/payload.wav"
+		output_f="${workdir}/app_${2}/transcript.txt"
+		temp_f="${workdir}/app_${2}/exec.tmp"
+	fi
+	
+	cp "${payloads}/deepspeech/payload.wav" "${input_f}"
+	
+	# Clean the data folders
+	rm -f "${output_f}"
+	rm -f "${temp_f}"
+	
+	counter=0
+	while sleep 0.01; do
+		if [ -f "${input_f}" ]; then
+			touch "${temp_f}"
+			time deepspeech	--model "${models}/deepspeech/deepspeech-0.9.1-models.${modeltype}" \
+							--audio "${input_f}" \
+							>>	    "${output_f}" \
+							2> /dev/null
 
+			counter=$((counter+1))
+			
+			echo "Processed audio clips: ${counter}"
+			
+			rm -f "${output_f}"
+			rm -f "${temp_f}"
+		fi
+	done
+	
 fi

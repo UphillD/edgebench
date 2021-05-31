@@ -1,4 +1,5 @@
 #!/bin/bash
+# edgebench - build/build.sh
 # Builds and pushes the docker image
 
 # Print help
