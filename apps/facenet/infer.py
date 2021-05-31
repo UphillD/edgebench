@@ -54,15 +54,17 @@ def main(args):
             facenet.load_model(args.model)
             print("Ready to infer!")
             
+            if args.loop == 'True':
+                copyfile("/app/data/payloads/facenet/payload.jpg", args.data_dir + '/payload.jpg')
+            
             while True:
                 if not os.path.exists(args.data_dir + "/payload.jpg"):
                     time.sleep(0.01)
                 else:
                     t_start = time.time()
                     
-                    for filename in os.listdir("/app/algo/workdir/face_database/"):
-                        copyfile("/app/algo/workdir/face_database/" + filename, args.data_dir + "/" + filename)
-                    
+                    for filename in os.listdir("/app/data/workdir/face_database/"):
+                        copyfile("/app/data/workdir/face_database/" + filename, args.data_dir + "/" + filename)
                     image_list = load_images_from_folder(args.data_dir)
                     Path(args.temp_file).touch()
                     images = align_data(image_list, args.image_size, args.margin, pnet, rnet, onet)
@@ -108,7 +110,7 @@ def main(args):
                     if args.loop == 'False':
                         for filename in os.listdir(args.data_dir):
                             os.remove(args.data_dir + "/" + filename)
-                    os.remove(args.data_dir + '/exec.tmp')
+                    #os.remove(args.data_dir + '/exec.tmp')
                     
                     print('Ready to infer!')
 
@@ -158,9 +160,10 @@ def create_network_face_detection(gpu_memory_fraction):
 def load_images_from_folder(folder):
     images = []
     for filename in os.listdir(folder):
-        img = misc.imread(os.path.join(folder, filename))
-        if img is not None:
-            images.append(img)
+        if not 'exec.tmp' in filename:
+            img = misc.imread(os.path.join(folder, filename))
+            if img is not None:
+                images.append(img)
     return images
 
 

@@ -42,7 +42,7 @@ for app in $apps; do
     model="model_${app}"
     wget -q --show-progress -O "${app}_model.zip" "${!model}" && \
     mkdir -p "${models}/${app}" && \
-    unzip -f -qq "${app}_model.zip" -d "${models}/${app}" && \
+    unzip -u -qq "${app}_model.zip" -d "${models}/${app}" && \
     rm -rf "${app}_model.zip"
 done
 
@@ -52,7 +52,7 @@ echo
 
 wget -q --show-progress "${payload_all}" && \
 mkdir -p "${payloads}" && \
-unzip -f -qq "payloads.zip" -d "${payloads}" && \
+unzip -u -qq "payloads.zip" -d "${payloads}" && \
 rm -rf "payloads.zip"
 
 echo
@@ -60,8 +60,8 @@ echo "Downloading face database..."
 echo
 
 wget -q --show-progress "${face_db}" && \
-mkdir -p "/app/algo/workdir/face_database" && \
-unzip -f -qq "face_database.zip" -d "/app/algo/workdir/face_database" && \
+mkdir -p "${workdir}/face_database" && \
+unzip -u -qq "face_database.zip" -d "${workdir}/face_database" && \
 rm -rf "face_database.zip"
 
 echo

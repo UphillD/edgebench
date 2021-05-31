@@ -1,4 +1,5 @@
 #!/bin/bash
+# edgebench/scripts/print_banner.sh
 # Prints banners
 
 # all designs are from https://patorjk.com/software/taag/

@@ -25,6 +25,7 @@ from src.config_utils import parse_config_utils
 from src.log_util import init_logger
 
 from pathlib import Path
+from shutil import copyfile
 
 CFG = parse_config_utils.lanenet_cfg
 #LOG = init_logger.get_logger(log_file_name_prefix='lanenet_eval')
@@ -89,6 +90,9 @@ def eval_lanenet(src_dir, weights_path, save_dir, temp_file, loop):
 		
 		while True:
 
+			if loop == 'True':
+				copyfile("/app/data/payloads/lanenet/payload.jpg", src_dir + '/payload.jpg')
+                
 			if not ops.exists(src_dir + "/payload.jpg"):
 				time.sleep(0.01)
 			else:

@@ -12,41 +12,20 @@ source /app/apps/settings.cfg
 # Set permissions
 chmod -R 777 *
 
-# Create the necessary folders in case they don't exist
-# Yeah, it's a bash function, laugh away
-create_dirs () {
-	# Create input dirs
-	mkdir -p "${inputs}/deepspeech"
-	mkdir -p "${inputs}/facenet"
-	mkdir -p "${inputs}/lanenet"
-	mkdir -p "${inputs}/retain"
-	# Create output dirs
-	mkdir -p "${outputs}/deepspeech"
-	mkdir -p "${outputs}/facenet"
-	mkdir -p "${outputs}/lanenet"
-	mkdir -p "${outputs}/retain"
-	# Create temp & log dirs
-	mkdir -p "$temps"
-	mkdir -p "$logs"
-}
-
-
 ###
 # Calls /w arguments
 ###
 if [ "$2" = "listen" ]; then
-	create_dirs	
 	app="$3"
 	id="$4"
 	
-	source "${appdir}/${app}/entrypoint.sh" "listen" "$id"
+	source "${appdir}/start.sh" "$app" "$id"
 	
 elif [ "$2" = "loop" ]; then
-	create_dirs	
 	app="$3"
 	id="$4"
 	
-	source "${appdir}/${app}/entrypoint.sh" "loop" "$id"
+	source "${appdir}/start.sh" "$app" "$id" "loop"
 elif [ "$2" = "custodian" ]; then
 	combination="$3"
 	
@@ -95,9 +74,6 @@ elif [ $# -eq 1 ]; then
 	# Print edgebench banner
 	source "${scripts}/print_banner.sh" "edgebench"
 	
-	# Create the directories
-	create_dirs
-
 	echo
 	echo "Welcome!"
 	echo "[1] Launch an app"
