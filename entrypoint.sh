@@ -79,9 +79,7 @@ elif [ "$2" = "logger" ]; then
 	python3 "${algodir}/${algorithm}/logger.py"
 	
 elif [ "$2" = "prepare" ]; then
-	source "${scripts}/get_models.sh"
-	source "${scripts}/get_payloads.sh"
-	source "${scripts}/get_face_db.sh"
+	source "${scripts}/prepare.sh"
 
 elif [ "$2" = "profile" ]; then
 	app="$3"
@@ -175,9 +173,7 @@ elif [ $# -eq 1 ]; then
 		"4") python3 "${algodir}/spawner.py" "$task_number" ;;
 		"5") python3 "${algodir}/${algorithm}/device.py" "$device_id" ;;
 		"6") python3 "${algodir}/${algorithm}/gateway.py" "$gateway_id" ;;
-		"7") source "${scripts}/get_models.sh"
-			 source "${scripts}/get_payloads.sh"
-			 source "${scripts}/get_face_db.sh" ;;
+		"7") source "${scripts}/prepare.sh" ;;
 		"0") source "${scripts}/clean_all.sh" ;;
 		*)   echo "Please enter a valid selection!" ;;
 	esac
