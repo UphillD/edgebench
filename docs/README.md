@@ -1,4 +1,4 @@
-w![edgebench logo](logo.png)
+![edgebench logo](logo.png)
 
 ##
 
@@ -40,14 +40,14 @@ Currently supported platforms: `arm32v6`, `arm32v7`, `arm64v8`, `amd64`
 
 Run the following command:
 
-`git clone https://github.com/UphillD/edgebench && cd edgebench && git clone https://github.com/UphillD/edgebench.algos algo && ./launcher.sh prepare`
-
+    git clone https://github.com/UphillD/edgebench && \
+    cd edgebench && \
+    git clone https://github.com/UphillD/edgebench.algos algo && \
+    ./launcher.sh prepare
+    
 ## Usage
 
-1. Clone the repo:	`git clone https://github.com/uphilld/edgebench.git`
-2. Pull the latest docker image: `docker pull uphilld/edgebench:<platform>`
-3. Use the launcher to download the models and payloads
-4. Start the launcher:
+Start the launcher:
 
 __Interactive menu:__ `./launcher.sh`
 

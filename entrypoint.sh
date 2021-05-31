@@ -83,6 +83,12 @@ elif [ "$2" = "prepare" ]; then
 	source "${scripts}/get_payloads.sh"
 	source "${scripts}/get_face_db.sh"
 
+elif [ "$2" = "profile" ]; then
+	app="$3"
+	dev="$4"
+	cd scripts
+	python3 "${scripts}/profiler.py" "$platform" "$app" "$dev"
+
 
 ###
 # Interactive menu

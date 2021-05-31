@@ -1,25 +1,24 @@
 import csv
 
+from glob import iglob
 from numpy import mean
-from subprocess import Popen, PIPE, DEVNULL
+from subprocess import Popen, PIPE, DEVNULL, STDOUT
 from os import chdir, system, path, remove
+from shutil import rmtree
 from sys import argv
 from time import sleep
-import shutil
-import glob
 
-
+"""
 combos = [
 	[1,0,0,0],
 	[1,1,0,0], [1,0,1,0], [1,0,0,1],
 	[1,1,1,0], [1,1,0,1], [1,0,1,1],
 	[1,1,1,1]
 ]
-
 """
+
 combos =   [
-	#[1,0,0,0], [2,0,0,0],
-	[2,0,0,0],
+	[1,0,0,0], [2,0,0,0],
 	[1,1,0,0], [1,2,0,0], [2,1,0,0], [2,2,0,0],
 	[1,0,1,0], [1,0,2,0], [2,0,1,0], [2,0,2,0],
 	[1,0,0,1], [1,0,0,2], [2,0,0,1], [2,0,0,2],
@@ -28,7 +27,6 @@ combos =   [
 	[1,0,1,1], [1,0,1,2], [1,0,2,1], [1,0,2,2], [2,0,1,1], [2,0,1,2], [2,0,2,1], [2,0,2,2],
 	[1,1,1,1], [1,1,1,2], [1,1,2,1], [1,1,2,2], [1,2,1,1], [1,2,1,2], [1,2,2,1], [1,2,2,2], [2,1,1,1], [2,1,1,2], [2,1,2,1], [2,1,2,2], [2,2,1,1], [2,2,1,2], [2,2,2,1], [2,2,2,2]
 ]
-"""
 
 app_dict = {
 	'deepspeech' : [ 'facenet', 'lanenet', 'retain' ],
@@ -69,22 +67,24 @@ def get_acet(app, cnt):
 		lookfor = 'real'
 	
 	c = 0
-		
-	cmd = [ './launcher.sh', 'loop', app, str(cnt) ]
-	with Popen(cmd, stdout=PIPE, bufsize=1, universal_newlines=True) as proc:
-		for line in proc.stdout:
-			if line.startswith(lookfor):
-				break
+	cmd = [ './entrypoint.sh', platform, 'loop', app, str(cnt) ]
+	with Popen(cmd, stdout=PIPE, stderr=STDOUT, bufsize=1, universal_newlines=True) as proc:
 		for line in proc.stdout:
 			if line.startswith(lookfor):
 				secs = get_times(app, line)
 				avgt.append(secs)
 				c += 1
 				if not c % 10:
-					return mean(avgt)
+					proc.terminate()
+					return round(mean(avgt), 2)
 
-app = argv[1]
-device = argv[2]
+
+platform = argv[1]
+app = argv[2]
+device = argv[3]
+
+system('clear')
+print('Launching edgebench profiler for {}'.format(app))
 
 with open(app + '.' + device + '.csv', mode='w') as csv_file:
 	fieldnames = ['index', 'app_1', 'app_2', 'app_3', 'app_4', 'acet']
@@ -95,40 +95,43 @@ print('CSV file created.')
 	
 
 chdir('..')
+procs = []
 
 for combo in combos:
 	print('Running combo ({},{},{},{}).'.format(str(combo[0]), str(combo[1]), str(combo[2]), str(combo[3])))
 	
 	
-	path_list = glob.iglob(path.join('./algo/workdir/', 'app_*'))
-	for apppath in path_list:
-		if path.isdir(apppath):
-			shutil.rmtree(apppath)
+	path_list = iglob(path.join('./algo/workdir/', 'app_*'))
+	for app_path in path_list:
+		if path.isdir(app_path):
+			rmtree(app_path, ignore_errors=True)
 	
 	cnt = 1
 	for i in range(1, 4):
 		for j in range(combo[i]):
-			cmd = [ './launcher.sh', 'loop', app_dict[app][i - 1], str(cnt) ]
-			Popen(cmd, stdout=DEVNULL)
+			cmd = [ './entrypoint.sh', platform, 'loop', app_dict[app][i - 1], str(cnt) ]
+			procs.append(Popen(cmd, stdout=DEVNULL, stderr=DEVNULL))
 			cnt += 1
 	
 	for j in range(combo[0] - 1):
-		cmd = [ './launcher.sh', 'loop', app, str(cnt) ]
-		Popen(cmd, stdout=DEVNULL)
+		cmd = [ './entrypoint.sh', platform, 'loop', app, str(cnt) ]
+		procs.append(Popen(cmd, stdout=DEVNULL, stderr=DEVNULL))
 		cnt += 1
 	
 	# Wait until all apps have begun
 	for i in range(1, cnt):
 		while not path.isfile('./algo/workdir/app_' + str(i) + '/exec.tmp'): 
 			sleep(0.1)
-		else:
-			print('Background apps ready!')
 	
 	acet = get_acet(app, cnt)
 	print('ACET = {}'.format(str(acet)))
+	print('')
 	
-	system("docker kill $(docker ps -a | grep 'edgebench' | cut -c1-12)")
-	system('docker container prune -f')
+	#system("docker kill $(docker ps -a | grep 'edgebench' | cut -c1-12) >/dev/null 2>&1") 
+	#system("docker container prune -f >/dev/null 2>&1")
+	
+	for proc in procs:
+		proc.terminate()
 	
 	with open('./scripts/' + app + '.' + device + '.csv', mode='a') as csv_file:
 		writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
