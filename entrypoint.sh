@@ -63,15 +63,16 @@ elif [ $# -eq 1 ]; then
 	
 	echo
 	echo "Welcome!"
-	echo "[1] Launch an app"
-	echo "[2] Launch an app listener"
+	echo "[1] Launch an app listener"
+	echo "[2] Launch an app listener ad nauseam"
 	echo "[3] Launch a Custodian"
 	echo "[4] Launch a Spawner"
 	echo "[5] Launch a device module"
 	echo "[6] Launch a gateway module"
-	echo "[7] Prepare models, payloads & face database"
+	echo "[7] Launch an app profiler"
+	echo "[9] Prepare models, payloads & face database"
 	echo "[0] Cleanup"
-	read -n1 -p "Enter your selection [0 - 7]:" command
+	read -n1 -p "Enter your selection [0 - 9]:" command
 	echo
 
 	# Command specific settings
@@ -136,7 +137,7 @@ elif [ $# -eq 1 ]; then
 		"4") python3 "${algodir}/spawner.py" "$task_number" ;;
 		"5") python3 "${algodir}/${algorithm}/device.py" "$device_id" ;;
 		"6") python3 "${algodir}/${algorithm}/gateway.py" "$gateway_id" ;;
-		"7") source "${scripts}/prepare.sh" ;;
+		"9") source "${scripts}/prepare.sh" ;;
 		"0") source "${scripts}/clean_all.sh" ;;
 		*)   echo "Please enter a valid selection!" ;;
 	esac
