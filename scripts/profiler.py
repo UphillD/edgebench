@@ -97,11 +97,10 @@ print('CSV file created.')
 chdir('..')
 procs = []
 
-for combo in combos:
-	print('Running combo ({},{},{},{}).'.format(str(combo[0]), str(combo[1]), str(combo[2]), str(combo[3])))
+for index, combo in enumerate(combos):
+	print('Running combo ({},{},{},{}) ({}/{})'.format(combo[0], combo[1], combo[2], combo[3], index + 1, len(combos)))
 	
-	
-	path_list = iglob(path.join('./algo/workdir/', 'app_*'))
+	path_list = iglob(path.join('./data/workdir/', 'app_*'))
 	for app_path in path_list:
 		if path.isdir(app_path):
 			rmtree(app_path, ignore_errors=True)
@@ -120,12 +119,12 @@ for combo in combos:
 	
 	# Wait until all apps have begun
 	for i in range(1, cnt):
-		while not path.isfile('./algo/workdir/app_' + str(i) + '/exec.tmp'): 
+		while not path.isfile('./data/workdir/app_' + str(i) + '/exec.tmp'): 
 			sleep(0.1)
 	
 	acet = get_acet(app, cnt)
-	print('ACET = {}'.format(str(acet)))
-	print('')
+	#print('ACET = {}'.format(str(acet)))
+	#print('')
 	
 	#system("docker kill $(docker ps -a | grep 'edgebench' | cut -c1-12) >/dev/null 2>&1") 
 	#system("docker container prune -f >/dev/null 2>&1")

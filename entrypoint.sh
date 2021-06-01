@@ -12,60 +12,47 @@ source /app/apps/settings.cfg
 # Set permissions
 chmod -R 777 *
 
-###
-# Calls /w arguments
-###
-if [ "$2" = "listen" ]; then
-	app="$3"
-	id="$4"
-	
-	source "${appdir}/start.sh" "$app" "$id"
-	
-elif [ "$2" = "loop" ]; then
-	app="$3"
-	id="$4"
-	
-	source "${appdir}/start.sh" "$app" "$id" "loop"
-elif [ "$2" = "custodian" ]; then
-	combination="$3"
-	
-	cd "$algodir"
-	python3 "${algodir}/custodian.py" "$platform" "$combination"
-	
-elif [ "$2" = "spawner" ]; then
-	task_number="$3"
-	
-	cd "$algodir"
-	python3 "${algodir}/spawner.py" "$task_number"
-
-elif [ "$2" = "device" ]; then
-	algorithm="$3"
-	device_id="$4"
-	
-	cd "${algodir}/${algorithm}"
-	python3 "${algodir}/${algorithm}/device.py" "$platform" "$device_id"
-	
-elif [ "$2" = "gateway" ]; then
-	algorithm="$3"
-	gateway_id="$4"
-	
-	cd "${algodir}/${algorithm}"
-	python3 "${algodir}/${algorithm}/gateway.py" "$platform" "$gateway_id"
-
-elif [ "$2" = "logger" ]; then
-	
-	cd "${algodir}/${algorithm}"
-	python3 "${algodir}/${algorithm}/logger.py"
-	
-elif [ "$2" = "prepare" ]; then
-	source "${scripts}/prepare.sh"
-
-elif [ "$2" = "profile" ]; then
-	app="$3"
-	dev="$4"
-	cd scripts
-	python3 "${scripts}/profiler.py" "$platform" "$app" "$dev"
-
+if [ $# -gt 1 ]; then
+	case "$2" in
+	"listen")		app="$3"
+					id="$4"
+					source "${appdir}/start.sh" "$app" "$id"
+					;;
+	"loop")			app="$3"
+					id="$4"
+					source "${appdir}/start.sh" "$app" "$id" "loop"
+					;;
+	"custodian")	combination="$3"
+					cd "$algodir"
+					python3 "${algodir}/custodian.py" "$platform" "$combination"
+					;;
+	"spawner")		task_number="$3"
+					cd "$algodir"
+					python3 "${algodir}/spawner.py" "$task_number"
+					;;
+	"device")		algorithm="$3"
+					device_id="$4"
+					cd "${algodir}/${algorithm}"
+					python3 "${algodir}/${algorithm}/device.py" "$platform" "$device_id"
+					;;
+	"gateway")		algorithm="$3"
+					gateway_id="$4"
+					cd "${algodir}/${algorithm}"
+					python3 "${algodir}/${algorithm}/gateway.py" "$platform" "$gateway_id"
+					;;
+	"logger")		cd "${algodir}/${algorithm}"
+					python3 "${algodir}/${algorithm}/logger.py"
+					;;
+	"prepare")		source "${scripts}/prepare.sh"
+					;;
+	"profile")		app="$3"
+					dev="$4"
+					cd scripts
+					python3 "${scripts}/profiler.py" "$platform" "$app" "$dev"
+					;;
+	*)				print_help
+					;;
+	esac
 
 ###
 # Interactive menu
