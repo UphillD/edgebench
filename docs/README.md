@@ -7,10 +7,14 @@ A collection of heterogenous machine learning applications employed as use-cases
 ![arch: arm32v6](arch-arm32v6-blue.svg)
 ![arch: arm32v7](arch-arm32v7-blue.svg)
 ![arch: arm64v8](arch-arm64v8-blue.svg)
-![arch: arm64](arch-amd64-blue.svg)
+![arch: amd64](arch-amd64-blue.svg)
 
 ![platform: Raspberry Pi 4](platform-raspberrypi4-brightgreen.svg)
-![platform: Tegra X1](platform-tegrax1-brightgreen.svg)
+![platform: Jetson TX1](platform-jetsontx1-brightgreen.svg)
+![platform: Jetson Nano](platform-jetsonnano-brightgreen.svg)
+![platform: 
+
+![platform:
 
 ## Table of Contents
 

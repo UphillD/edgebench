@@ -21,7 +21,7 @@ print_help () {
 	echo '              custode <combination>,'
 	echo '              spawn <num of tasks>,'
 	echo '              device/gateway <algorithm> <device id>,'
-	echo '              profile <app> <arch>,'
+	echo '              profile <app> <arch> <scale>,'
 	echo '              prepare/log'
 	echo
 }
@@ -90,8 +90,9 @@ if [ $# -gt 1 ]; then
 					;;
 	"profile")		app="$3"
 					dev="$4"
+					scale="$5"
 					cd scripts
-					python3 "${scripts}/profiler.py" "$platform" "$app" "$dev"
+					python3 "${scripts}/profile.py" "$platform" "$app" "$dev" "$scale"
 					;;
 	*)				source "${scripts}/print_banner.sh" "edgebench"
 					print_help
@@ -149,8 +150,9 @@ elif [ $# -eq 1 ]; then
 			;;
 	"8")	get_app
 			read -p "Enter the name of the architecture:" arch
+			read -n1 -p "Enter the app scale:" scale
 			cd scripts
-			python3 "${scripts}/profile.py" "$platform" "$app" "$arch"
+			python3 "${scripts}/profile.py" "$platform" "$app" "$arch" "$scale"
 			;;
 	"9")	source "${scripts}/prepare.sh"
 			;;
