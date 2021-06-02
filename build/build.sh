@@ -1,5 +1,5 @@
 #!/bin/bash
-# edgebench - build/build.sh
+# edgebench/build/build.sh
 # Builds and pushes the docker image
 
 # Print help
@@ -8,7 +8,7 @@ if [ $# -eq 0 ]; then
 	echo
 	echo "Usage:  ./build.sh <architecture>"
 	echo 
-	echo "  architectures: amd64, arm64v8, arm32v7, arm32v6, all"
+	echo "    architectures: amd64, arm64v8, arm32v7, arm32v6, all"
 	echo
 	exit 1;
 fi

@@ -8,15 +8,15 @@ from shutil import rmtree
 from sys import argv
 from time import sleep
 
-
+"""
 combos = [
 	[1,0,0,0],
 	[1,1,0,0], [1,0,1,0], [1,0,0,1],
 	[1,1,1,0], [1,1,0,1], [1,0,1,1],
 	[1,1,1,1]
 ]
-
 """
+
 combos =   [
 	[1,0,0,0], [2,0,0,0],
 	[1,1,0,0], [1,2,0,0], [2,1,0,0], [2,2,0,0],
@@ -27,7 +27,7 @@ combos =   [
 	[1,0,1,1], [1,0,1,2], [1,0,2,1], [1,0,2,2], [2,0,1,1], [2,0,1,2], [2,0,2,1], [2,0,2,2],
 	[1,1,1,1], [1,1,1,2], [1,1,2,1], [1,1,2,2], [1,2,1,1], [1,2,1,2], [1,2,2,1], [1,2,2,2], [2,1,1,1], [2,1,1,2], [2,1,2,1], [2,1,2,2], [2,2,1,1], [2,2,1,2], [2,2,2,1], [2,2,2,2]
 ]
-"""
+
 app_dict = {
 	'deepspeech' : [ 'facenet', 'lanenet', 'retain' ],
 	'facenet'    : [ 'deepspeech', 'lanenet', 'retain' ],
@@ -35,6 +35,7 @@ app_dict = {
 	'retain'     : [ 'deepspeech', 'facenet', 'lanenet' ]
 }
 
+# extract time in seconds from line of output
 def get_times(app, line):
 	if app == 'deepspeech':
 		res = line[4:].lstrip().rstrip()
@@ -55,6 +56,7 @@ def get_times(app, line):
 	
 	return secs
 	
+# launch the app in question, parse output, extract execution time
 def get_acet(app, cnt):
 	avgt = []
 	if app == 'deepspeech':
@@ -70,27 +72,34 @@ def get_acet(app, cnt):
 	cmd = [ './entrypoint.sh', platform, 'loop', app, str(cnt) ]
 	with Popen(cmd, stdout=PIPE, stderr=STDOUT, bufsize=1, universal_newlines=True) as proc:
 		for line in proc.stdout:
+			# print(line)
 			if line.startswith(lookfor):
 				secs = get_times(app, line)
 				avgt.append(secs)
 				c += 1
-				if not c % 10:
+				if not c % 6:
 					proc.terminate()
 					return round(mean(avgt), 2)
 
-
+# Actual execution starts here
 platform = argv[1]
 app = argv[2]
 device = argv[3]
 
+# chdir to /app
+chdir('..')
+
+# Print some info
 system('clear')
-system('bash print_banner.sh edgebench')
+system('bash scripts/print_banner.sh edgebench')
 print('')
 print('Launching profiler for {} on {}..'.format(app, device))
 
+# Create .csv file to store results
+csv_f = 'scripts/' + app + '.' + device + '.csv'
 fieldnames = ['index', 'app_1', 'app_2', 'app_3', 'app_4', 'acet']
-if not path.isfile(app + '.' + device + '.csv'):
-	with open(app + '.' + device + '.csv', mode='w') as csv_file:
+if not path.isfile(csv_f):
+	with open(csv_f, mode='w') as csv_file:
 		writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 		writer.writeheader()
 	print('CSV file created.')
@@ -98,35 +107,40 @@ else:
 	print('CSV file creation skipped.')
 print('')
 
-chdir('..')
 procs = []
 
 for index, combo in enumerate(combos):
-	
+	# Calculate index of combo
+	# e.g. combo = (1,1,2,1) -> index = 1121
 	csv_idx = str(combo[0]*1000 + combo[1]*100 + combo[2] * 10 + combo[3])
 	
+	# Check whether the combo in question has already been done
 	flag = False
-	with open('scripts/' + app + '.' + device + '.csv', mode='r') as csv_file:
+	with open(csv_f, mode='r') as csv_file:
 		reader = csv.DictReader(csv_file)
 		for row in reader:
 			if csv_idx in row['index']:
+				# flag to skip this combo
 				flag = True
 				acet = row['acet']
 				print('Skipping  combo ({},{},{},{}) ({}/{}) : ACET = {}'.format(combo[0], combo[1], combo[2], combo[3], index + 1, len(combos), acet))
 	
 	if not flag:
+		# Clean up the workdir
 		path_list = iglob(path.join('./data/workdir/', 'app_*'))
 		for app_path in path_list:
 			if path.isdir(app_path):
 				rmtree(app_path, ignore_errors=True)
 		
+		# Start the other apps
 		cnt = 1
 		for i in range(1, 4):
 			for j in range(combo[i]):
 				cmd = [ './entrypoint.sh', platform, 'loop', app_dict[app][i - 1], str(cnt) ]
 				procs.append(Popen(cmd, stdout=DEVNULL, stderr=DEVNULL))
 				cnt += 1
-		
+				
+		# Start the other instances of the app in question
 		for j in range(combo[0] - 1):
 			cmd = [ './entrypoint.sh', platform, 'loop', app, str(cnt) ]
 			procs.append(Popen(cmd, stdout=DEVNULL, stderr=DEVNULL))
@@ -143,13 +157,15 @@ for index, combo in enumerate(combos):
 		#system("docker kill $(docker ps -a | grep 'edgebench' | cut -c1-12) >/dev/null 2>&1") 
 		#system("docker container prune -f >/dev/null 2>&1")
 		
+		# Send SIGTERM TO all instances
 		for proc in procs:
 			proc.terminate()
 		
-		with open('./scripts/' + app + '.' + device + '.csv', mode='a') as csv_file:
+		# Store the result
+		with open(csv_f, mode='a') as csv_file:
 			writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 			writer.writerow({
-				'index' : str(combo[0]*1000 + combo[1]*100 + combo[2] * 10 + combo[3]), 
+				'index' : str(csv_idx), 
 				'app_1' : str(combo[0]), 
 				'app_2' : str(combo[1]), 
 				'app_3' : str(combo[2]), 

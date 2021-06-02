@@ -51,12 +51,14 @@ Start the launcher:
 
 __Interactive menu:__ `./launcher.sh`
 
+__Interactive shell:__ `./launcher.sh explore`
+
 __Direct call:__ `./launcher.sh <command> <arguments>`
 
 ## Project Tree
 
     $root
-    ├ 🔒 algo
+    ├ algo 🔒
     ├ apps
     ├    ├ deepspeech
     ├    ├ facenet

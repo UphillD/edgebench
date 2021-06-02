@@ -1,5 +1,5 @@
 #!/bin/bash
-# edgebench - scripts/prepare.sh
+# edgebench/scripts/prepare.sh
 # Downloads and setups models, payloads, face database
 
 # Source config file

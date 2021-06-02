@@ -1,5 +1,5 @@
 #!/bin/bash
-# edgebench - apps/start.sh
+# edgebench/apps/start.sh
 # App launcher
 # ./start.sh $app $id (default=0) $option (loop, default="")
 
@@ -17,8 +17,9 @@ cd "${appdir}/${app}"
 # Print banner
 source "${scripts}/print_banner.sh" "${app}"
 
+# Init & folder stuff
 if [ "$appid" = "0" ] || [ "$appid" = "" ]; then	working="${workdir}/app_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c 3 ; echo '');
-else						working="${workdir}/app_${2}"; fi
+else												working="${workdir}/app_${2}"; fi
 rm -rf "$working"
 mkdir -p "$working"
 chmod -R 777 "$working"

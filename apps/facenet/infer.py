@@ -44,6 +44,7 @@ from shutil import copyfile
 
 def main(args):
 	
+    # Get rid of unnecessary warnings
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
     warnings.filterwarnings("ignore", category=DeprecationWarning)

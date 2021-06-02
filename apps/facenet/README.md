@@ -1,3 +1,5 @@
+#### Source repo: [davidsandberg/facenet](https://github.com/davidsandberg/facenet)
+---
 # Face Recognition using Tensorflow [![Build Status][travis-image]][travis]
 
 [travis-image]: http://travis-ci.org/davidsandberg/facenet.svg?branch=master

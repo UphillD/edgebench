@@ -1,6 +1,6 @@
 #!/bin/bash
 # edgebench/scripts/print_banner.sh
-# Prints banners
+# Prints the banners o7
 
 # all designs are from https://patorjk.com/software/taag/
 
@@ -10,7 +10,7 @@ if [ $# -eq 0 ]; then
 	echo
 	echo "Usage:  ./print_banner.sh <app>"
 	echo 
-	echo "  apps: edgebench, deepspeech, facenet, lanenet, retain"
+	echo "    apps: edgebench, deepspeech, facenet, lanenet, retain"
 	echo
 	exit 1;
 fi

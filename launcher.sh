@@ -1,5 +1,6 @@
 #!/bin/bash
-# edgebench - launcher.sh
+# edgebench/launcher.sh
+# edgebench launcher
 # Launches the docker image
 
 # Get & Set the execution platform
@@ -17,23 +18,28 @@ elif [ "$(uname -m)" = "armv6l"  ]; then
 fi
 
 ## Launch the docker image
-# Passes all arguments through to the docker image
+# Passes any arguments through to the docker image
 # Possible invocations:
-#    interactive menu (no arguments)
-#    listen <app> <id>
-#    loop <app> <id>
-#    custodian <app combination>
-#    spawner <number of tasks>
-#    device <algorithm> <device id>
-#    gateway <algorithm> <gateway id>
+#    no argument -> interactive menu
+# or explore     -> launch shell
+# or call directly:
+#       listen <app> <id>
+#       loop <app> <id>
+#       custodian <app combination>
+#       spawner <number of tasks>
+#       device <algorithm> <device id>
+#       gateway <algorithm> <gateway id>
 #
 # Parameters:
 #   -it: make the shell interactive
 #   -v:  mount the current dir
 #   -t:  set the appropriate tag
+#   --entrypoint: change entrypoint script
 #
 if [ $# -eq 0 ]; then
 	docker run -it -v $PWD:/app -t uphilld/edgebench:"$platform" "$platform"
+elif [ "$1" = "explore" ]; then
+	docker run -it --entrypoint /bin/sh -v $PWD:/app -t uphilld/edgebench:"$platform"
 else
 	docker run -v $PWD:/app -t uphilld/edgebench:"$platform" "$platform" "$@"
 fi
