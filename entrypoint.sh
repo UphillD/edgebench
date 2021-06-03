@@ -90,9 +90,11 @@ if [ $# -gt 1 ]; then
 					;;
 	"profile")		app="$3"
 					dev="$4"
-					scale="$5"
+					combo="$5"
+					index="$6"
+					length="$7"
 					cd scripts
-					python3 "${scripts}/profile.py" "$platform" "$app" "$dev" "$scale"
+					python3 "${scripts}/profile.py" "$platform" "$app" "$dev" "$combo" "$index" "$length"
 					;;
 	*)				source "${scripts}/print_banner.sh" "edgebench"
 					print_help
