@@ -76,7 +76,7 @@ def get_acet(app, cnt):
 				secs = get_times(app, line)
 				avgt.append(secs)
 				c += 1
-				if not c % 6:
+				if not c % 10:
 					proc.terminate()
 					return round(mean(avgt), 2)
 
