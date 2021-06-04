@@ -45,8 +45,8 @@ import time
 
 def main(args):
 	
-	payloaddir = '/app/data/payloads'
-	workdir = '/app/data/workdir'
+    payloaddir = '/app/data/payloads'
+    workdir = '/app/data/workdir'
 	
     # Get rid of unnecessary warnings
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
