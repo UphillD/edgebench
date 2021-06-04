@@ -26,7 +26,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from pathlib import Path
 from scipy import misc
+from shutil import copyfile
+from sklearn.cluster import DBSCAN
+
 import tensorflow as tf
 import numpy as np
 import os
@@ -34,15 +38,15 @@ import sys
 import argparse
 import facenet
 import detect_face
-from sklearn.cluster import DBSCAN
 import warnings
 import time
 
-from pathlib import Path
-from shutil import copyfile
 
 
 def main(args):
+	
+	payloaddir = '/app/data/payloads'
+	workdir = '/app/data/workdir'
 	
     # Get rid of unnecessary warnings
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -56,7 +60,7 @@ def main(args):
             print("Ready to infer!")
             
             if args.loop == 'True':
-                copyfile("/app/data/payloads/facenet/payload.jpg", args.data_dir + '/payload.jpg')
+                copyfile(payloaddir + '/facenet/payload.jpg', args.data_dir + '/payload.jpg')
             
             while True:
                 if not os.path.exists(args.data_dir + "/payload.jpg"):
@@ -64,8 +68,8 @@ def main(args):
                 else:
                     t_start = time.time()
                     
-                    for filename in os.listdir("/app/data/workdir/face_database/"):
-                        copyfile("/app/data/workdir/face_database/" + filename, args.data_dir + "/" + filename)
+                    for filename in os.listdir(workdir + '/face_database/'):
+                        copyfile(workdir + '/face_database/' + filename, args.data_dir + "/" + filename)
                     image_list = load_images_from_folder(args.data_dir)
                     Path(args.temp_file).touch()
                     images = align_data(image_list, args.image_size, args.margin, pnet, rnet, onet)
@@ -111,7 +115,6 @@ def main(args):
                     if args.loop == 'False':
                         for filename in os.listdir(args.data_dir):
                             os.remove(args.data_dir + "/" + filename)
-                    #os.remove(args.data_dir + '/exec.tmp')
                     
                     print('Ready to infer!')
 

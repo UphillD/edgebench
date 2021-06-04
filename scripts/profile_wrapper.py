@@ -1,3 +1,7 @@
+# edgebench/scripts/profile_wrapper.py
+# Run this from the host
+# (nohup) python3 profile_wrapper.py <app> <arch> <scale> (&)
+
 from os import chdir, system
 from subprocess import Popen, PIPE, STDOUT
 from sys import argv
@@ -21,14 +25,13 @@ combo_dict = {
 	]
 }
 
+# Actual execution starts here
 system('clear')
 system('bash print_banner.sh edgebench')
 print('')
-# Actual execution starts here
 app = argv[1]
 device = argv[2]
 scale = argv[3]
-
 combos = combo_dict[scale]
 
 chdir('..')
@@ -40,5 +43,3 @@ for index, combo in enumerate(combos):
 			if 'combo' in line_str:
 				print(line_str.replace('\n', ''))
 	system("docker kill $(docker ps -a | grep 'edgebench' | cut -c1-12) >/dev/null 2>&1") 
-	#system("docker rm $(docker ps -a | grep 'edgebench' | cut -c1-12) >/dev/null 2>&1") 
-	#system("docker container prune -f >/dev/null 2>&1")

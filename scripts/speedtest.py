@@ -1,4 +1,5 @@
-# Small test to get current bandwidth between devices
+# edgebench/scripts/speedtest.py
+# Small test to get current bandwidth between devices fast
 # Call with pub on one device and sub on the other
 # Doesn't need the docker image
 from paho.mqtt import publish, subscribe

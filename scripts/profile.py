@@ -1,3 +1,5 @@
+# edgebench/scripts/profile.py
+# Call this via the profile_wrapper.py file
 import csv
 
 from glob import iglob

@@ -13,15 +13,15 @@ source /app/apps/settings.cfg
 # Print help message
 print_help () {
 	echo
-	echo 'Usage:  ./launcher.sh 			for interactive menu'
-	echo '    or  ./launcher.sh explore		for interactive shell'
-	echo '    or  ./launcher.sh <command> 	for direct launch'
+	echo 'Usage:  ./launcher.sh              for interactive menu'
+	echo '    or  ./launcher.sh explore      for interactive shell'
+	echo '    or  ./launcher.sh <command>    for direct launch'
 	echo
 	echo '    commands: listen/loop <app> <app id>,'
 	echo '              custode <combination>,'
 	echo '              spawn <num of tasks>,'
 	echo '              device/gateway <algorithm> <device id>,'
-	echo '              profile <app> <arch> <scale>,'
+	echo '              profile <app> <arch> <combo> <index> <length>'
 	echo '              prepare/log'
 	echo
 }
@@ -36,10 +36,11 @@ get_app () {
 	read -n1 -p "Enter your selection [1, 2, 3, 4]:" option
 	echo
 	case "$option" in
-		"1") app="deepspeech" ;;
-		"2") app="facenet" ;;
-		"3") app="lanenet" ;;
-		"4") app="retain" ;;
+		"1")	app="deepspeech" ;;
+		"2")	app="facenet" ;;
+		"3")	app="lanenet" ;;
+		"4")	app="retain" ;;
+		*)		echo "Please enter a valid selection." ; exit 1 ;;
 	esac
 }
 
@@ -49,8 +50,9 @@ get_algo () {
 	echo "[2] Oracle"
 	read -n1 -p "Enter your selection [1, 2]:" option
 	case "$opt2" in
-		"1") algorithm="SGRM" ;;
-		"2") algorithm="Oracle" ;;
+		"1")	algorithm="SGRM" ;;
+		"2")	algorithm="Oracle" ;;
+		*)		echo "Please enter a valid selection." ; exit 1 ;;
 	esac
 }
 
@@ -152,9 +154,11 @@ elif [ $# -eq 1 ]; then
 			;;
 	"8")	get_app
 			read -p "Enter the name of the architecture:" arch
-			read -n1 -p "Enter the app scale:" scale
+			read -n1 -p "Enter the app combo:" combo
+			read -n1 -p "Enter the app combo index:" index
+			read -n1 -p "Enter the total app combos:" length
 			cd scripts
-			python3 "${scripts}/profile.py" "$platform" "$app" "$arch" "$scale"
+			python3 "${scripts}/profile.py" "$platform" "$app" "$arch" "$combo" "$index" "$length"
 			;;
 	"9")	source "${scripts}/prepare.sh"
 			;;

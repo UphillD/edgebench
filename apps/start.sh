@@ -18,8 +18,8 @@ cd "${appdir}/${app}"
 source "${scripts}/print_banner.sh" "${app}"
 
 # Init & folder stuff
-if [ "$appid" = "0" ] || [ "$appid" = "" ]; then	working="${workdir}/app_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c 3 ; echo '');
-else												working="${workdir}/app_${2}"; fi
+if [ "$appid" = "0" ] || [ "$appid" = "" ]; then	working="${workdir}/app_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c 3 ; echo '') ;
+else												working="${workdir}/app_${2}" ; fi
 rm -rf "$working"
 mkdir -p "$working"
 chmod -R 777 "$working"
@@ -35,7 +35,7 @@ if [ "$app" = "deepspeech" ]; then
 	output_f="${working}/transcript.txt"
 	
 	if [ "$3" = "loop" ]; then cp "${payloads}/deepspeech/payload.wav" "${input_f}" ; fi
-	while sleep 0.01 ; do
+	while sleep 0.01; do
 		if [ -f "${input_f}" ]; then
 			touch "$temp_f"
 			time deepspeech --model "$model" --audio "$input_f" >> "$output_f"
@@ -44,7 +44,6 @@ if [ "$app" = "deepspeech" ]; then
 			rm -f "${temp_f}"
 		fi
 	done
-
 
 ### Facenet
 elif [ "$app" = "facenet" ]; then
@@ -67,7 +66,6 @@ elif [ "$app" = "lanenet" ]; then
 	else							loop="False" ; fi
 	
 	python3.7 infer.py --image_dir "$input_f" --weights_path "$model" --save_dir "$output_f" --temp_file "$temp_f" --loop "$loop"
-
 
 ### RETAIN
 elif [ "$app" = "retain" ]; then

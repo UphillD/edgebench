@@ -28,9 +28,10 @@ from pathlib import Path
 from shutil import copyfile
 
 CFG = parse_config_utils.lanenet_cfg
-#LOG = init_logger.get_logger(log_file_name_prefix='lanenet_eval')
 
-
+payloaddir = '/app/data/payloads'
+workdir = '/app/data/workdir'
+	
 def init_args():
 	"""
 
@@ -91,7 +92,7 @@ def eval_lanenet(src_dir, weights_path, save_dir, temp_file, loop):
 		while True:
 
 			if loop == 'True':
-				copyfile("/app/data/payloads/lanenet/payload.jpg", src_dir + '/payload.jpg')
+				copyfile(payloaddir + '/lanenet/payload.jpg', src_dir + '/payload.jpg')
                 
 			if not ops.exists(src_dir + "/payload.jpg"):
 				time.sleep(0.01)
@@ -120,12 +121,8 @@ def eval_lanenet(src_dir, weights_path, save_dir, temp_file, loop):
 
 					input_image_dir = ops.split(image_path)[0][1:]
 					input_image_name = ops.split(image_path)[1]
-					#output_image_dir = save_dir
 					os.makedirs(save_dir, exist_ok=True)
 					output_image_path = ops.join(save_dir, "output.jpg")
-					#output_image_path = output_image_dir
-					#if ops.exists(output_image_path):
-					#	continue
 
 					cv2.imwrite(output_image_path, postprocess_result['source_image'])
 					

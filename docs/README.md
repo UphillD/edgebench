@@ -12,9 +12,7 @@ A collection of heterogenous machine learning applications employed as use-cases
 ![platform: Raspberry Pi 4](platform-raspberrypi4-brightgreen.svg)
 ![platform: Jetson TX1](platform-jetsontx1-brightgreen.svg)
 ![platform: Jetson Nano](platform-jetsonnano-brightgreen.svg)
-![platform: 
-
-![platform:
+![platform: 64-bit VM](platform-64bitvm-brightgreen.svg)
 
 ## Table of Contents
 
