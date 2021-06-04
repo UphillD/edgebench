@@ -1,5 +1,6 @@
-#### Source repo: [mozilla/DeepSpeech](https://github.com/mozilla/DeepSpeech/)
----
+Source repo: `mozilla/DeepSpeech <https://github.com/mozilla/DeepSpeech/>`_
+
+
 Project DeepSpeech
 ==================
 
