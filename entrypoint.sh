@@ -13,20 +13,21 @@ source /app/apps/settings.cfg
 # Print help message
 print_help () {
 	echo
-	echo 'Usage:  ./launcher.sh              for interactive menu'
-	echo '    or  ./launcher.sh explore      for interactive shell'
-	echo '    or  ./launcher.sh <command>    for direct launch'
+	echo "Usage:  ./launcher.sh              for interactive menu"
+	echo "    or  ./launcher.sh explore      for interactive shell"
+	echo "    or  ./launcher.sh <command>    for direct launch"
 	echo
-	echo '    commands: listen/loop <app> <app id>,'
-	echo '              custode <combination>,'
-	echo '              spawn <num of tasks>,'
-	echo '              device/gateway <algorithm> <device id>,'
-	echo '              profile <app> <arch> <combo> <index> <length>'
-	echo '              prepare/log'
+	echo "    commands: listen/loop <app> <app id>,"
+	echo "              custode <combination>,"
+	echo "              spawn <num of tasks>,"
+	echo "              device/gateway <algorithm> <device id>,"
+	echo "              profile <app> <arch> <combo> <index> <length>"
+	echo "              prepare/log"
 	echo
 }
 
-# Menu helpers
+# Macro functions
+# These are called by the interactive menu
 get_app () {
 	echo "Select an app:"
 	echo "[1] deepspeech"
@@ -110,21 +111,21 @@ elif [ $# -eq 1 ]; then
 	
 	echo
 	echo "Welcome!"
-	echo '--------------------------------------------------'
+	echo "--------------------------------------------------"
 	echo "[1] Launch an app listener"
 	echo "[2] Launch an app listener ad nauseam"
-	echo '--------------------------------------------------'
+	echo "--------------------------------------------------"
 	echo "[3] Launch a Custodian"
 	echo "[4] Launch a Spawner"
 	echo "[5] Launch a device module"
 	echo "[6] Launch a gateway module"
 	echo "[7] Launch a logger"
-	echo '--------------------------------------------------'
+	echo "--------------------------------------------------"
 	echo "[8] Launch an app profiler"
-	echo '--------------------------------------------------'
+	echo "--------------------------------------------------"
 	echo "[9] Prepare models, payloads & face database"
 	echo "[0] Cleanup"
-	echo '--------------------------------------------------'
+	echo "--------------------------------------------------"
 	read -n1 -p "Enter your selection [0 - 9]:" command
 	echo
 	
@@ -168,4 +169,5 @@ elif [ $# -eq 1 ]; then
 			;;
 	esac
 	echo
+	
 fi
