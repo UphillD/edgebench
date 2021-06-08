@@ -10,6 +10,7 @@ from shutil import rmtree
 from sys import argv
 from time import sleep
 
+# Dictionary used to match applications with their names
 app_dict = {
 	'deepspeech' : [ 'facenet', 'lanenet', 'retain' ],
 	'facenet'    : [ 'deepspeech', 'lanenet', 'retain' ],
@@ -17,7 +18,7 @@ app_dict = {
 	'retain'     : [ 'deepspeech', 'facenet', 'lanenet' ]
 }
 
-# extract time in seconds from line of output
+# Extract time in seconds from line of output
 def get_times(app, line):
 	if app == 'deepspeech':
 		res = line[4:].lstrip().rstrip()
@@ -38,7 +39,7 @@ def get_times(app, line):
 	
 	return secs
 	
-# launch the app in question, parse output, extract execution time
+# Launch the app in question, parse output, extract execution time
 def get_acet(app, cnt):
 	avgt = []
 	if app == 'deepspeech':
@@ -67,7 +68,6 @@ def get_acet(app, cnt):
 platform = argv[1]
 app = argv[2]
 device = argv[3]
-#scale = argv[4]
 
 # chdir to /app
 chdir('..')

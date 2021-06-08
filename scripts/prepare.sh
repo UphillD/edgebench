@@ -8,9 +8,7 @@ source /app/apps/settings.cfg
 # Print edgebench banner
 source "${scripts}/print_banner.sh" "edgebench"
 
-### 
-# URLs
-###
+### URLs
 # Model URLs
 if [ "$platform" = "amd64" ]; then	model_deepspeech="https://dropbox.com/s/cx2z6ka4tjselyl/deepspeech_model_pbmm.zip" ;
 else								model_deepspeech="https://dropbox.com/s/u2li4rw9zceb7uk/deepspeech_model_tflite.zip"; fi
@@ -31,9 +29,7 @@ payload_all="https://dropbox.com/s/kzm1s4hcrk95l5p/payloads.zip"
 # Face Database URL
 face_db="https://dropbox.com/s/bczpwwj1vueig0c/face_database.zip"
 
-###
-# Main Script
-###
+### Main Script
 echo
 echo "Downloading pretrained models..."
 echo

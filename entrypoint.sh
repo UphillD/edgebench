@@ -1,7 +1,7 @@
 #!/bin/bash
 # edgebench/entrypoint.sh
 # Docker image entrypoint
-# This should be called from within the image
+# This is (and should be) called from within the image
 
 # Grab the execution platform passed on by the launcher
 platform="$1"
@@ -17,12 +17,15 @@ print_help () {
 	echo "    or  ./launcher.sh explore      for interactive shell"
 	echo "    or  ./launcher.sh <command>    for direct launch"
 	echo
-	echo "    commands: listen/loop <app> <app id>,"
+	echo "    commands: listen <app> <app id>,"
+	echo "              loop <app> <app id>,"
 	echo "              custode <combination>,"
-	echo "              spawn <num of tasks>,"
-	echo "              device/gateway <algorithm> <device id>,"
+	echo "              spawn <num of tasks> or <algorithm> <timeline>,"
+	echo "              device <algorithm> <device id>,"
+	echo "              gateway <algorithm> <gateway id>,"
 	echo "              profile <app> <arch> <combo> <index> <length>"
-	echo "              prepare/log"
+	echo "              prepare"
+	echo "              log"
 	echo
 }
 
@@ -48,11 +51,13 @@ get_app () {
 get_algo () {
 	echo "Select an algorithm:"
 	echo "[1] SGRM"
-	echo "[2] Oracle"
+	echo "[2] NoOffload"
+	echo "[3] Oracle"
 	read -n1 -p "Enter your selection [1, 2]:" option
 	case "$opt2" in
 		"1")	algorithm="SGRM" ;;
-		"2")	algorithm="Oracle" ;;
+		"2")	algorithm="NoOffload" ;;
+		"3")	algorithm="Oracle" ;;
 		*)		echo "Please enter a valid selection." ; exit 1 ;;
 	esac
 }
@@ -155,9 +160,9 @@ elif [ $# -eq 1 ]; then
 			;;
 	"8")	get_app
 			read -p "Enter the name of the architecture:" arch
-			read -n1 -p "Enter the app combo:" combo
-			read -n1 -p "Enter the app combo index:" index
-			read -n1 -p "Enter the total app combos:" length
+			read -p "Enter the app combo:" combo
+			read -p "Enter the app combo index:" index
+			read -p "Enter the total app combos:" length
 			cd scripts
 			python3 "${scripts}/profile.py" "$platform" "$app" "$arch" "$combo" "$index" "$length"
 			;;

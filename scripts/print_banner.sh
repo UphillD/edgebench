@@ -1,8 +1,7 @@
 #!/bin/bash
 # edgebench/scripts/print_banner.sh
 # Prints the banners o7
-
-# all designs are from https://patorjk.com/software/taag/
+# All designs are from https://patorjk.com/software/taag/
 
 # Print help
 if [ $# -eq 0 ]; then
@@ -24,6 +23,8 @@ if [ "$1" = "edgebench" ]; then
 	printf "\e[1;36m%s\e[m\n" $'|  __/ (_| | (_| |  __/ |_) |  __/ | | | (__| | | |';    sleep 0.2
 	printf "\e[1;36m%s\e[m\n" $' \___|\__,_|\__, |\___|_.__/ \___|_| |_|\___|_| |_|';    sleep 0.2
 	printf "\e[1;36m%s\e[m\n" $'            |___/                                  ';    sleep 0.2
+	echo
+	
 elif [ "$1" = "deepspeech" ]; then
 	# threepoint ASCII scheme
 	clear
@@ -31,6 +32,7 @@ elif [ "$1" = "deepspeech" ]; then
 	printf "\e[1;35m%s\e[m\n" $'(_|(/_(/_|_)_\|_)(/_(/_(_| |'; sleep 0.2
 	printf "\e[1;35m%s\e[m\n" $'         |    |             '; sleep 0.2
 	echo
+	
 elif [ "$1" = "facenet" ]; then
 	# Elite ASCII scheme
 	clear
@@ -40,6 +42,7 @@ elif [ "$1" = "facenet" ]; then
 	printf "\e[0;34m%s\e[m\n" $'██▌.▐█ ▪▐▌▐███▌▐█▄▄▌██▐█▌▐█▄▄▌ ▐█▌·'; sleep 0.2
 	printf "\e[0;34m%s\e[m\n" $'▀▀▀  ▀  ▀ ·▀▀▀  ▀▀▀ ▀▀ █▪ ▀▀▀  ▀▀▀ '; sleep 0.2
 	echo
+	
 elif [ "$1" = "lanenet" ]; then
 	# bigchief ASCII scheme
 	clear
@@ -48,6 +51,7 @@ elif [ "$1" = "lanenet" ]; then
 	printf "\e[0;37m%s\e[m\n" $'|  ||  _  |     |  -__|     |  -__||   _|'; sleep 0.2
 	printf "\e[0;37m%s\e[m\n" $'|__||___._|__|__|_____|__|__|_____||____|'; sleep 0.2
 	echo
+	
 elif [ "$1" = "retain" ]; then
 	# JS Bracket Letters ASCII scheme
 	clear
@@ -56,16 +60,5 @@ elif [ "$1" = "retain" ]; then
 	printf "\e[1;32m%s\e[m\n" $'| .-. \| {__  | | /  /\  \| || |\  |'; sleep 0.2
 	printf "\e[1;32m%s\e[m\n" $'`-\' `-\'`----\' `-\' `-\'  `-\'`-\'`-\' `-\''; sleep 0.2
 	echo
+	
 fi
-
-
-
-
-
-
-
-
-
-
-
-

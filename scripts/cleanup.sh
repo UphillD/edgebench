@@ -1,9 +1,9 @@
 #!/bin/bash
 # edgebench/scripts/cleanup.sh
-# Cleans up workdir
+# Cleans up working directory
 
 # Source config file
 source /app/apps/settings.cfg
 
-echo "Cleaning up workdir"
+echo "Cleaning up working directory..."
 rm -rf "${workdir}/app_"*

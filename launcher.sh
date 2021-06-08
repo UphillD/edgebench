@@ -1,7 +1,6 @@
 #!/bin/bash
 # edgebench/launcher.sh
-# edgebench launcher
-# Launches the docker image
+# Docker image launcher
 
 # Get & Set the execution platform
 # We set this in order to pull the correct docker tag
@@ -15,24 +14,24 @@ case "$(uname -m)" in
 	*)			echo 'Platform not found'; exit 1 ;;
 esac
 
-## Launch the docker image
-# Passes any arguments through to the docker image
+# Launch the docker image & pass any arguments through
+#
 # Possible invocations:
-#    no argument -> interactive menu
-# or explore     -> launch shell
-# or call directly:
-#       listen <app> <id>
-#       loop <app> <id>
-#       custodian <app combination>
-#       spawner <number of tasks>
-#       device <algorithm> <device id>
-#       gateway <algorithm> <gateway id>
-#       profile <app> <arch> <combo> <index> <length>
+#      no arguments -> interactive menu
+#   or explore      -> launch shell
+#   or call directly:
+#        listen <app> <app id>
+#        loop <app> <app id>
+#        custodian <app combination>
+#        spawner <number of tasks> or <algorithm> <timeline>
+#        device <algorithm> <device id>
+#        gateway <algorithm> <gateway id>
+#        profile <app> <arch> <combo> <index> <length>
 #
 # Parameters:
 #   -it: make the shell interactive
-#   -v:  mount the current dir
-#   -t:  set the appropriate tag
+#   -v:  mount a volume
+#   -t:  set the image tag
 #   --entrypoint: change image entrypoint
 #
 if [ "$1" = "explore" ]; then	docker run -it --entrypoint /bin/sh -v $PWD:/app -t uphilld/edgebench:"$platform" ;
