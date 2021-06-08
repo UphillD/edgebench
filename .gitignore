@@ -1,9 +1,11 @@
 # python cache
 __pycache__/
 
-# data
+# data directories
 /data/
 /algo/
 
-# log files
+# logs
 *.csv
+state.txt
+
