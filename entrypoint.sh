@@ -75,7 +75,7 @@ if [ $# -gt 1 ]; then
 					;;
 	"custode")		combination="$3"
 					cd "$algodir"
-					python3 "${algodir}/custodian.py" "$combination"
+					python3 "${algodir}/custodian.py" "$combination" "$platform"
 					;;
 	"spawn")		task_number="$3"
 					cd "$algodir"
