@@ -63,3 +63,11 @@ rm -rf "face_database.zip"
 echo
 echo "Script done!"
 echo
+
+# Extra step: ask and store device platform
+echo
+echo "What device are you running this on?"
+echo "Options: rpi4, rpi4_2, rpi4_3, tegra, nano, amd64, amd64_2"
+read -p "Enter the name of the device:" device
+
+sed -i "/platform = ''/c\platform = '${device}'" /app/algo/config.py

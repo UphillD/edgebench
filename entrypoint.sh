@@ -37,7 +37,7 @@ get_app () {
 	echo "[2] facenet"
 	echo "[3] lanenet"
 	echo "[4] retain"
-	read -n1 -p "Enter your selection [1, 2, 3, 4]:" option
+	read -p "Enter your selection [1, 2, 3, 4]:" option
 	echo
 	case "$option" in
 		"1")	app="deepspeech" ;;
@@ -53,8 +53,8 @@ get_algo () {
 	echo "[1] SGRM"
 	echo "[2] NoOffload"
 	echo "[3] Oracle"
-	read -n1 -p "Enter your selection [1, 2]:" option
-	case "$opt2" in
+	read -p "Enter your selection [1, 2, 3]:" option
+	case "$option" in
 		"1")	algorithm="SGRM" ;;
 		"2")	algorithm="NoOffload" ;;
 		"3")	algorithm="Oracle" ;;
@@ -75,7 +75,7 @@ if [ $# -gt 1 ]; then
 					;;
 	"custode")		combination="$3"
 					cd "$algodir"
-					python3 "${algodir}/custodian.py" "$platform" "$combination"
+					python3 "${algodir}/custodian.py" "$combination"
 					;;
 	"spawn")		task_number="$3"
 					cd "$algodir"
@@ -84,12 +84,12 @@ if [ $# -gt 1 ]; then
 	"device")		algorithm="$3"
 					device_id="$4"
 					cd "${algodir}/${algorithm}"
-					python3 "${algodir}/${algorithm}/device.py" "$platform" "$device_id"
+					python3 "${algodir}/${algorithm}/device.py" "$device_id"
 					;;
 	"gateway")		algorithm="$3"
 					gateway_id="$4"
 					cd "${algodir}/${algorithm}"
-					python3 "${algodir}/${algorithm}/gateway.py" "$platform" "$gateway_id"
+					python3 "${algodir}/${algorithm}/gateway.py" "$gateway_id"
 					;;
 	"log")			cd "${algodir}/${algorithm}"
 					python3 "${algodir}/${algorithm}/logger.py"
@@ -143,17 +143,19 @@ elif [ $# -eq 1 ]; then
 			source "${appdir}/start.sh" "$app" "0" "loop"
 			;;
 	"3")	read -p "Enter your app combo in the form of a,b,c,d:" combination
-			python3 "${algodir}/custodian.py" "$platform" "$combination"
+			python3 "${algodir}/custodian.py" "$combination"
 			;;
 	"4")	read -p "Enter the number of tasks you want to spawn:" task_number
 			python3 "${algodir}/spawner.py" "$task_number"
 			;;
 	"5")	get_algo
-			read -n1 -p "Enter your device id:" device_id
+			read -p "Enter your device id:" device_id
+			cd "${algodir}/${algorithm}"
 			python3 "${algodir}/${algorithm}/device.py" "$device_id"
 			;;
 	"6")	get_algo
-			read -n1 -p "Enter your gateway id:" gateway_id
+			read -p "Enter your gateway id:" gateway_id
+			cd "${algodir}/${algorithm}"
 			python3 "${algodir}/${algorithm}/gateway.py" "$gateway_id"
 			;;
 	"7")	python3 "${algodir}/logger.py"
@@ -168,7 +170,7 @@ elif [ $# -eq 1 ]; then
 			;;
 	"9")	source "${scripts}/prepare.sh"
 			;;
-	"0")	source "${scripts}/clean_all.sh"
+	"0")	source "${scripts}/cleanup.sh"
 			;;
 	*)		echo "Please enter a valid selection!"
 			;;
