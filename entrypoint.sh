@@ -77,9 +77,10 @@ if [ $# -gt 1 ]; then
 					cd "$algodir"
 					python3 "${algodir}/custodian.py" "$combination" "$platform"
 					;;
-	"spawn")		task_number="$3"
+	"spawn")		#task_number="$3"
 					cd "$algodir"
-					python3 "${algodir}/spawner.py" "$task_number"
+					#python3 "${algodir}/spawner.py" "$task_number"
+					python3 "${algodir}/spawner.py" "$3" "$4"
 					;;
 	"device")		algorithm="$3"
 					device_id="$4"
