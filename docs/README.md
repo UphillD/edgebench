@@ -76,7 +76,7 @@ __Direct call:__ `./launcher.sh <command> <arguments>`
 
 The algo folder is omitted for obvious reasons.
 
-The data folder is also omitted, models and payloads can be downloaded via the corresponding selection on the menu.
+The data folder is also omitted, models and payloads can be downloaded through the appropriate menu selection.
 
 ## Miscellaneous
 

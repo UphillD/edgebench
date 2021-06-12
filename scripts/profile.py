@@ -142,13 +142,6 @@ if not flag:
 	acet = get_acet(app, cnt)
 	print('Completed combo ({},{},{},{}) ({}/{}) : ACET = {}'.format(combo[0], combo[1], combo[2], combo[3], index + 1, length, acet))
 	
-	#system("docker kill $(docker ps -a | grep 'edgebench' | cut -c1-12) >/dev/null 2>&1") 
-	#system("docker container prune -f >/dev/null 2>&1")
-	
-	# Send SIGTERM TO all instances
-	for proc in procs:
-		proc.terminate()
-	
 	# Store the result
 	with open(csv_f, mode='a') as csv_file:
 		writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
