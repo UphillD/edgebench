@@ -2,7 +2,7 @@
 
 ##
 
-A collection of heterogenous machine learning applications employed as use-cases for the resource management algorithm I am developing for my bachelor thesis.
+A collection of properly configured heterogenous machine learning applications employed as use-cases for the resource management algorithm I am developing for my bachelor thesis.
 
 ![arch: arm32v6](arch-arm32v6-blue.svg)
 ![arch: arm32v7](arch-arm32v7-blue.svg)
