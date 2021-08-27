@@ -1,0 +1,3 @@
+[submodule "algo"]
+	path = algo
+	url = https://github.com/UphillD/edgebench.algos
