@@ -115,7 +115,7 @@ elif [ $# -eq 1 ]; then
 	# Print edgebench banner
 	source "${scripts}/print_banner.sh" "edgebench"
 	
-	echo
+	#echo
 	echo "Welcome!"
 	echo "--------------------------------------------------"
 	echo "[1] Launch an app listener"
@@ -173,7 +173,7 @@ elif [ $# -eq 1 ]; then
 			;;
 	"0")	source "${scripts}/cleanup.sh"
 			;;
-	*)		echo "Please enter a valid selection!"
+	*)		echo "Please enter a valid selection! Exiting..."
 			;;
 	esac
 	echo

@@ -1,9 +1,17 @@
 # python cache
 __pycache__/
 
-# data directories
+# data directory
 /data/
-/algo/
+
+# algorithm directory
+/algo/.gitignore
+/algo/docs/
+/algo/OffloadAll/
+/algo/OffloadNone/
+/algo/Oracle/
+/algo/SGRM/
+/algo/DMRM/
 
 # logs
 *.csv
