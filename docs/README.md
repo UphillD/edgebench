@@ -44,7 +44,6 @@ Run the following command:
 
     git clone https://github.com/UphillD/edgebench && \
     cd edgebench && \
-    git clone https://github.com/UphillD/edgebench.algos algo && \
     ./launcher.sh prepare
     
 ## Usage
@@ -72,7 +71,8 @@ __Direct call:__ `./launcher.sh <command> <arguments>`
     ├    ├ payloads
     ├    └ models
     ├ docs
-    └ scripts
+    ├ scripts
+    └ workers
 
 The algo folder is omitted for obvious reasons.
 

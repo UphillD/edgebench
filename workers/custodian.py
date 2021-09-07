@@ -1,6 +1,6 @@
 # Shared modules
 # Custodian module
-# Starts and maintains a combination of applications
+# Starts, monitors and maintains a combination of applications
 #
 # Data Structures:
 #     task_matrix: [ 'z', 'w', 'D', 'Start Timestamp', 'Projected Duration' ]
@@ -48,7 +48,7 @@ elif len(argv) == 3:
 	combo = list(map(int, argv[1].split(',')))
 	# Grab the platform & set the app profile
 	platform = argv[2]
-	
+	print('test')
 	# Initialize the task matrix & store it
 	remove_matrix(workdir + '/task_matrix.pkl')
 	task_matrix = pd.DataFrame(columns=['z', 'w', 'D', 'Start Timestamp', 'Projected Duration'])
@@ -117,12 +117,12 @@ elif len(argv) == 3:
 		print('')
 		next(gen)
 		print('')
-		
+		print('test')
 		
 		# Check 1 : Completed tasks
 		# Look through every instance
 		for index, row in state_matrix.iterrows():
-			# Check if instance is labeled as running, but the indicator file is gone[
+			# Check if instance is labeled as running, but the indicator file is gone
 			if row['State'] == 'running' and not path.isfile(workdir + '/app_' + str(index) + '/exec.tmp'):
 				
 				# Grab finish timestamp
@@ -178,11 +178,11 @@ elif len(argv) == 3:
 				write_matrix(task_matrix, workdir + '/task_matrix.pkl')
 				
 				# Send to logger
-				payload = str(z) + ',' + str(et) + ',' + str(pt) + ',' + str(perror) + ',' + overdue
-				publish.single('sgrm/log/cus', payload, qos=1, hostname=broker)
+				#payload = str(z) + ',' + str(et) + ',' + str(pt) + ',' + str(perror) + ',' + overdue
+				#publish.single('sgrm/log/cus', payload, qos=1, hostname=broker)
 				
 		
-		# Check 2 : Completed tasks
+		# Check 2 : New tasks
 		# Look through every .que file in workdir
 		new_tasks = glob('*.que')
 		if len(new_tasks) > 0:
