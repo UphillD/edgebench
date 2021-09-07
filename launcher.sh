@@ -34,7 +34,7 @@ esac
 #   -t:  set the image tag
 #   --entrypoint: change image entrypoint
 #
-if   [ "$#" -eq 0 ];								then docker run -it -v $PWD:/app -t uphilld/edgebench:"$platform" "$platform" "$@" ;
-elif [ "$1" = "explore" ];							then docker run -it --entrypoint /bin/sh -v $PWD:/app -t uphilld/edgebench:"$platform" ;
-elif [ "$1" = "spawn" ] || [ "$1" = "prepare" ];	then docker run -it -v $PWD:/app -t uphilld/edgebench:"$platform" "$platform" "$@" ;
-else													 docker run -v $PWD:/app -t uphilld/edgebench:"$platform" "$platform" "$@" ; fi
+if   [ "$#" -eq 0 ];								then docker run -it -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ;
+elif [ "$1" = "explore" ];							then docker run -it -v $PWD:/app --entrypoint /bin/sh -t uphilld/edgebench:"$platform"                  ;
+elif [ "$1" = "spawn" ] || [ "$1" = "prepare" ];	then docker run -it -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ;
+else													 docker run     -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ; fi

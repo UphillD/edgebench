@@ -27,7 +27,6 @@ temp_f="${working}/exec.tmp"
 
 ### Deepspeech
 if [ "$app" = "deepspeech" ]; then
-
 	if [ "$platform" = "amd64" ]; then	modeltype="pbmm" ;
 	else 								modeltype="tflite" ; fi
 	model="${models}/deepspeech/deepspeech-0.9.1-models.${modeltype}"

@@ -1,2 +1,2 @@
-# Classify all dockerfiles properly
+# Classify stray dockerfile properly
 build/Dockerfile.arm32v6 linguist-language=Dockerfile
