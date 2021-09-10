@@ -71,6 +71,15 @@ color_dict = {
 }
 
 logo_dict = {
+	'edgebench' : [
+		"          _            _                     _     ",
+		"         | |          | |                   | |    ",
+		"  ___  __| | __ _  ___| |__   ___ _ __   ___| |__  ",
+		" / _ \/ _` |/ _` |/ _ \ '_ \ / _ \ '_ \ / __| '_ \ ",
+		"|  __/ (_| | (_| |  __/ |_) |  __/ | | | (__| | | |",
+		" \___|\__,_|\__, |\___|_.__/ \___|_| |_|\___|_| |_|",
+		"             __/ |                                 ",
+		"            |___/                                  " ],
 	'dmrm': [
 		"`7MM\"\"\"Yb. `7MMM.     ,MMF'`7MM\"\"\"Mq.  `7MMM.     ,MMF'",
 		"  MM    `Yb. MMMb    dPMM    MM   `MM.   MMMb    dPMM  ",
@@ -225,3 +234,9 @@ def print_logo(name, number=-1, color='CYAN'):
 		for i in range(len(logo_dict[name])):
 			print(color_dict[color] + logo_dict[name][i] + color_dict['END'])
 	
+
+def make_payload(*args):
+	# tuple -> list -> strings -> list
+	items = list(map(str, list(args)))
+	payload = '/'.join(items)
+	return payload

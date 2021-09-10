@@ -1,7 +1,10 @@
-# SGRM - Mediator
-# spawner.py
+# Edgebench Platform
+#  Worker Scripts
+#   Spawner Module
+#
 # Usages: python3 spawner <command>
 #     commands: oracle <timeline> <# of offload targets>
+#               timeline <timeline> <# of devices> <# of gateways>
 import pickle as pkl
 
 from paho.mqtt import publish, subscribe
@@ -25,7 +28,7 @@ def task_generator(n):
 		while (t < 0):
 			t = gauss(10, 5)
 		w = randint(0, 3)
-		x = randint(1, 2)
+		x = randint(1, 1)
 		D = task_deadlines[w]	
 		
 		task = [ z, t, w, x, D ]
@@ -34,29 +37,20 @@ def task_generator(n):
 	return timeline
 
 def increment_list(l):
-	if l[0] == 0:
-		l[0] = 9
-	#elif l[0] == 9:
-	#	l[0] = 8
-	else:
-		l[0] = 0
-		l = [ l[0] ] + increment_list(l[1:])
-	"""	
 	l[0] += 1
 	if l[0] > 2:
 		l[0] = 0
 		l = [ l[0] ] + increment_list(l[1:])
-	"""
 	return l
 
 clk = 0.0
 system('clear')
-print_logo('sgrm')
+print_logo('edgebench')
 print_logo('spawner', -1, 'PURPLE')
 print('')
 
 if argv[1] == 'timeline':
-	with open(algodir + '/scripts/'	 + argv[2] + '.pkl', 'rb') as f:
+	with open(tmldir + '/' + argv[2] + '.pkl', 'rb') as f:
 		timeline = pkl.load(f)
 	timeline.sort(key=lambda x: x[1])
 	
@@ -72,24 +66,30 @@ if argv[1] == 'timeline':
 			clk = t
 			
 			#(z, w, x, Ω, st)
-			payload = str(z) + ',' + str(w) + ',' + str(D) + ',' + str(x)
-			
 			# publish next task
 			# https://pypi.org/project/paho-mqtt/#id3	
 			print('Spawning task ({}, {}, {}) on device {}'.format(z, w, D, x))
-			publish.single('sgrm/dev/spawn/' + str(x), payload, qos=1, hostname=broker)
+			payload = make_payload(z, w, D, x)			
+			publish.single('edgebench/device/spawn/' + str(x), payload, qos=1, hostname=broker)
 
-	payload = input("Enter the name of the final log:")
-	publish.single('sgrm/log/fin', payload, qos=1, hostname=broker)
+			st = round(time(), 3)
+			payload = make_payload(z, w, D, x, st)
+			publish.single('edgebench/log/spawn', payload, qos=1, hostname=broker)
+
+	#payload = input("Enter the name of the final log:")
+	#publish.single('edgebench/log/complete', payload, qos=1, hostname=broker)
 	
 elif argv[1] == 'oracle':
-	with open(algodir + '/scripts/'	 + argv[2] + '.pkl', 'rb') as f:
+	
+	Y = int(argv[3])
+	
+	with open(tmldir + '/' + argv[2] + '.pkl', 'rb') as f:
 		timeline = pkl.load(f)
 	timeline.sort(key=lambda x: x[1])
 	
 	offload = [ 0, 0, 0, 0, 0, 0, 0, 0 ]
 	
-	for i in range(3 ** 8):
+	for i in range((Y + 2) ** len(offload)):
 		clk = 0.0
 		
 		for index, element in enumerate(timeline):
@@ -105,15 +105,15 @@ elif argv[1] == 'oracle':
 			y = offload[index]
 			
 			
-			payload = str(z) + ',' + str(w) + ',' + str(D) + ',' + str(x) + ',' + str(y)
+			payload = make_payload(z, w, D, x, y)
 			#print('Spawning task ({}, {}, {}) on device {}, will be offloaded to {}'.format(z, w, D, x, y))
-			publish.single('sgrm/dev/spawn/' + str(x), payload, qos=1, hostname=broker)
+			publish.single('edgebench/device/spawn/' + str(x), payload, qos=1, hostname=broker)
 		
-		subscribe.simple('sgrm/spawn', qos=1, hostname=broker)
+		#subscribe.simple('edgebench/spawn', qos=1, hostname=broker)
 		
 		#sleep(5)
-		payload = 'Oracle_' + str(i)
-		publish.single('sgrm/log/fin', payload, qos=1, hostname=broker)
+		#payload = 'Oracle_' + str(i)
+		#publish.single('sgrm/log/fin', payload, qos=1, hostname=broker)
 		offload = increment_list(offload)
 		print(offload)
 		sleep(2)
@@ -129,14 +129,25 @@ else:
 		sleep(element[1] - clk)
 		clk = element[1]
 		
+		z = int(element[0])
+		w = int(element[2])
+		D = int(element[4])
+		x = int(element[3])
+		st = round(time(), 3)
+		
 		#(z, w, x, Ω)
 		#st = str(round(time(), 2))
-		payload = str(element[0]) + ',' + str(element[2]) + ',' + str(element[4]) + ',' + str(element[3])# + ',' + st
-		
+		#payload = str(element[0]) + ',' + str(element[2]) + ',' + str(element[4]) + ',' + str(element[3])# + ',' + st
+		payload = make_payload(z, w, D, x)
 		# publish next task
 		# https://pypi.org/project/paho-mqtt/#id3	
 		print('Spawning task ({}, {}, {}) on device {}'.format(element[0], element[2], element[4], element[3]))
-		publish.single('sgrm/dev/spawn/' + str(element[3]), payload, qos=1, hostname=broker)
+		publish.single('edgebench/device/spawn/' + str(element[3]), payload, qos=1, hostname=broker)
+		
+		payload = make_payload(z, w, D, x, st)
+		publish.single('edgebench/log/spawn', payload, qos=1, hostname=broker)
+		
+		
 
 	payload = input("Enter the name of the final log:")
-	publish.single('sgrm/log/fin', payload, qos=1, hostname=broker)
+	publish.single('edgebench/log/save', payload, qos=1, hostname=broker)

@@ -79,7 +79,7 @@ if [ $# -gt 1 ]; then
 					;;
 	"custode")		combination="$3"
 					cd "$workers"
-					python3 "${workers}/custodian.py" "$combination" "$platform"
+					python3 "${workers}/custodian.py" "$platform" "$combination"
 					;;
 	"spawn")		mode="$3"
 					name="$4"
@@ -148,7 +148,7 @@ elif [ $# -eq 1 ]; then
 			source "${appdir}/start.sh" "$app" "0" "loop"
 			;;
 	"3")	read -p "Enter your app combo in the form of a,b,c,d:" combination
-			python3 "${workers}/custodian.py" "$combination" "$platform"
+			python3 "${workers}/custodian.py" "$platform" "$combination"
 			;;
 	"4")	read -p "Enter the number of tasks you want to spawn:" task_number
 			python3 "${workers}/spawner.py" "$task_number"
