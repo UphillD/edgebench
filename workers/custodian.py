@@ -5,10 +5,10 @@
 # Starts, monitors and maintains a combination of applications
 #
 # Data Structures:
-#     task_matrix: [ 'z', 'w', 'D', 'Start Timestamp' ]
+#     task_matrix: [ 'z', 'w', 'D', 'Start Timestamp', 'Estimated Duration' ]
 #         Stores information for tasks currently running
 #         Pandas DataFrame
-#         Types:   [ int, int, int, flt ]
+#         Types:   [ int, int, int, flt, flt ]
 #
 #     state_matrix: [ 'ID', 'App', 'State', 'z' ]
 #         Stores information for the state of machine instances
@@ -52,7 +52,7 @@ elif len(argv) == 3:
 
 	# Initialize the task matrix & store it
 	remove_matrix(workdir + '/task_matrix.pkl')
-	task_matrix = pd.DataFrame(columns=['z', 'w', 'D', 'Start Timestamp', 'Projected Duration'])
+	task_matrix = pd.DataFrame(columns=['z', 'w', 'D', 'Start Timestamp', 'Estimated Duration'])
 	task_matrix.set_index('z', inplace=True)
 	write_matrix(task_matrix, workdir + '/task_matrix.pkl')
 
@@ -100,27 +100,29 @@ elif len(argv) == 3:
 		print('')
 		print('\t   ⚒   TASKS   ⚒')
 		print('')
-		print(tabulate(task_matrix.drop(['Start Timestamp', 'Projected Duration'], 1), ['z', 'App'], tablefmt='fancy_grid'))
+		print(tabulate(task_matrix.drop(['Start Timestamp', 'Estimated Duration'], 1), ['z', 'App'], tablefmt='fancy_grid'))
 		print('')
 		print('')
 		print('\t   ⛯   STATES   ⛯')
 		print('')
-		print(tabulate(state_matrix, ['ID', 'App', 'State', 'Z'], tablefmt='fancy_grid'))
+		print(tabulate(state_matrix, ['ID', 'App', 'State', 'z'], tablefmt='fancy_grid'))
 		print('')
 		print('')
 		next(gen)
 		print('')
 
+		###
 		# Check 1 : Completed tasks
-		# Look through every instance
+		# Look through every machine instance
 		for index, row in state_matrix.iterrows():
 			# Check if instance is labeled as running, but the indicator file is gone
 			if row['State'] == 'running' and not path.isfile(workdir + '/app_' + str(index) + '/exec.tmp'):
-
-				z = row['z']
+				
 				# Grab finish timestamp
 				et = round(time(), 3)
-
+				# Get ID of task
+				z = row['z']
+				
 				# Update the state matrix
 				state_matrix.at[index, 'State'] = 'idle'
 				state_matrix.at[index, 'z'] = 0
@@ -129,9 +131,8 @@ elif len(argv) == 3:
 				# Drop the task row from the task matrix
 				task_matrix = read_matrix(workdir + '/task_matrix.pkl')
 				st = task_matrix.loc[z, 'Start Timestamp']
-				pd = task_matrix.loc[z, 'Projected Duration']
-				task_matrix.drop(z, axis=0, inplace=True)
-				#write_matrix(task_matrix, workdir + '/task_matrix.pkl')				
+				pd = task_matrix.loc[z, 'Estimated Duration']
+				task_matrix.drop(z, axis=0, inplace=True)				
 				
 				current_tasks = len(task_matrix)
 				tasks_weighted = []
@@ -144,22 +145,22 @@ elif len(argv) == 3:
 					
 					# Calculate times
 					done_t = time() - row_tm['Start Timestamp']
-					total_t = row_tm['Projected Duration']
+					total_t = row_tm['Estimated Duration']
 					remaining_per = 1 - ( done_t / total_t )
 					
 					# Calculate remaining time and total predicted duration
 					remaining_t = calculate_time(w, current_tasks, tasks_weighted, remaining_per)
 					duration = done_t + remaining_t
 					
-					task_matrix.at[index_tm, 'Projected Duration'] = duration
+					task_matrix.at[index_tm, 'Estimated Duration'] = duration
 				
 				write_matrix(task_matrix, workdir + '/task_matrix.pkl')
 
-				# Log 5: final
+				# Log 5: execution
 				payload = make_payload(z, st, et, pd)
 				publish.single('edgebench/log/execution', payload, qos=1, hostname=broker)
 
-
+		###
 		# Check 2 : New tasks
 		# Look through every .que file in workdir
 		new_tasks = glob('*.que')
@@ -178,6 +179,8 @@ elif len(argv) == 3:
 
 					# Delete .que file
 					remove(new_tasks[0])
+					
+					
 					current_tasks = len(task_matrix)
 					tasks_weighted = []
 					for i in range(4):
@@ -190,14 +193,14 @@ elif len(argv) == 3:
 						
 						# Calculate times
 						done_t = time() - row_tm['Start Timestamp']
-						total_t = row_tm['Projected Duration']
+						total_t = row_tm['Estimated Duration']
 						remaining_per = 1 + ( done_t / total_t )
 						
 						# Calculate remaining time and total predicted duration
 						remaining_t = calculate_time(int(w_tm), current_tasks + 1, tasks_weighted, remaining_per)
 						duration = round(done_t + remaining_t, 2)
 						
-						task_matrix.at[index_tm, 'Projected Duration'] = duration
+						task_matrix.at[index_tm, 'Estimated Duration'] = duration
 					
 					# Calculate predicted duration
 					duration = calculate_time(w, current_tasks + 1, tasks_weighted)

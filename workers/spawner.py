@@ -126,14 +126,13 @@ else:
 	for element in timeline:
 		
 		# wait for next task
-		sleep(element[1] - clk)
+		#sleep(element[1] - clk)
 		clk = element[1]
 		
 		z = int(element[0])
 		w = int(element[2])
 		D = int(element[4])
 		x = int(element[3])
-		st = round(time(), 3)
 		
 		#(z, w, x, Ω)
 		#st = str(round(time(), 2))
@@ -143,6 +142,7 @@ else:
 		# https://pypi.org/project/paho-mqtt/#id3	
 		print('Spawning task ({}, {}, {}) on device {}'.format(element[0], element[2], element[4], element[3]))
 		publish.single('edgebench/device/spawn/' + str(element[3]), payload, qos=1, hostname=broker)
+		st = round(time(), 3)
 		
 		payload = make_payload(z, w, D, x, st)
 		publish.single('edgebench/log/spawn', payload, qos=1, hostname=broker)

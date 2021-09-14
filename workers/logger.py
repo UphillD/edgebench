@@ -9,11 +9,6 @@
 #    4a. offload_f (device)
 #    5.  final     (device/gateway custodian)
 #
-# Timestamps:
-#    st = spawn time
-#    rt = receive time
-#    at = auction time
-#
 import csv
 import pandas as pd
 import pickle as pkl
@@ -67,12 +62,12 @@ def on_message(client, userdata, message):
 		print(topic, payload)
 		z = int(payload[0])
 
-		rt2 = round(float(payload[1]), 3)
+		rt = round(float(payload[1]), 3)
 		bt  = round(float(payload[2]), 3)
 
-		stat_matrix.loc[z, 'Receive Time (Auction)'] = rt2
-		if pd.isnull(stat_matrix.loc[z, 'Bid Time (First Bid)']):
-			stat_matrix.loc[z, 'Bid Time (First Bid)'] = bt
+		stat_matrix.loc[z, 'Receive Time (Auction)'] = rt
+		#if pd.isnull(stat_matrix.loc[z, 'Bid Time (First Bid)']):
+		#	stat_matrix.loc[z, 'Bid Time (First Bid)'] = bt
 		stat_matrix.loc[z, 'Bid Time (Last Bid)'] = bt
 
 	elif 'offload_first' in topic:
@@ -122,35 +117,20 @@ stat_matrix = pd.DataFrame(columns = ['z', 'w', 'D', 'x', 'y', 'Payoff (Device)'
 stat_matrix.set_index('z', inplace=True)
 write_matrix(stat_matrix, workdir + '/stat_matrix.pkl')
 
-#stat_matrix = pd.DataFrame(columns=['z', 'w', 'D', 'x', 'y', 'u', 'ug', 'Decision Time (Device)', 'Decision Time (Gateway)', 'Decision Time (Final)', 'Decision Time (Total)', 'Execution Time', 'Predicted Time', 'Prediction Error', 'Total Time', 'Overdue?', 'Offloaded?' ])
-
 client = client.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 client.connect(broker, 1883, 60)
-
 client.loop_start()
 
 while True:
 	sleep(1)
 	system('clear')
-	#print_logo('sgrm')
+	print_logo('edgebench', -1, 'PURPLE')
 	print_logo('logger')
 	print('')
-	#if not stat_matrix.empty:
-	#	stat_matrix = stat_matrix.sort_values('z')
-
-	#print_matrix = stat_matrix[['w', 'D', 'x', 'y', 'Payoff (Device)', 'Payoff (Gateway)', 'Overdue?', 'Offloaded?']]
-	#print_matrix.set_index('z', inplace=True)
-	#print(tabulate(print_matrix, headers='firstrow', tablefmt='presto'))
-	#print(tabulate(stat_matrix, headers="firstrow", tablefmt='presto'))
+	
 	stat_matrix = read_matrix(workdir + '/stat_matrix.pkl')
 	print(stat_matrix)
 	print('')
-
-	#if keyboard.is_pressed('enter'):
-	#	print('Storing and clearing matrix...')
-	#	csv_name = input('Enter a name for the csv file: ')
-	#	stat_matrix.to_csv(workdir + '/' + csv_name + '.csv')
-	#	stat_matrix = pd.DataFrame(columns=stat_matrix.columns)
 
