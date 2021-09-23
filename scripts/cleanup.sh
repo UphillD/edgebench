@@ -1,5 +1,8 @@
 #!/bin/bash
-# edgebench/scripts/cleanup.sh
+# Edgebench Platform
+# Helper Scripts
+# Cleaner
+#
 # Cleans up working directory
 
 # Source config file

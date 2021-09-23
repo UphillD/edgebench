@@ -1,4 +1,7 @@
-# edgebench/scripts/speedtest.py
+# Edgebench Platform
+# Helper Scripts
+# Speedtester
+#
 # Small test to get current bandwidth between devices fast
 # Call with pub on one device and sub on the other
 # Doesn't need the docker image

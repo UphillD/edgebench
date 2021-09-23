@@ -1,27 +1,24 @@
-# Shared
-# Collection of shared functions and settings
+# Edgebench Platform
+# Worker Scripts
+# Shared Module
+#
+# A collection of shared functions and settings
+
 import pandas as pd
-import pickle as pkl
 
 from os import path, remove
-from pathlib import Path
 
 from config import *
 
 # List of applications
 apps = [ 'deepspeech', 'facenet', 'lanenet', 'retain' ]
 
-# read/write matrix functions
+# Read/Write/Remove matrix functions
 def read_matrix(input_file):
-	return_matrix = pd.read_pickle(input_file)
-	#with open(input_file, 'rb') as f:
-	#	return_matrix = pkl.load(f)
-	return return_matrix
+	return pd.read_pickle(input_file)
 
 def write_matrix(input_matrix, output_file):
 	input_matrix.to_pickle(output_file)
-	#with open(output_file, 'wb') as f:
-		#pkl.dump(input_matrix, f)
 	return
 
 def remove_matrix(input_file):
@@ -29,6 +26,7 @@ def remove_matrix(input_file):
 		remove(input_file)
 	return
 
+# App categorization functions
 def categorize_task(w):
 	if w == 0:
 		return 'deepspeech', 'payload.wav'
@@ -49,14 +47,23 @@ def calculate_size(w):
 	elif w == 3:
 		return 3830
 
-
+# Count occurances of value w in dataframe df
 # https://stackoverflow.com/questions/35277075/python-pandas-counting-the-occurrences-of-a-specific-value
 def sum_mask_numpy(df, w):
     return (df.w.values == w).sum()
 
-# 
+# Turn a collection of variables into a string to publish via MQTT
+def make_payload(*args):
+	# tuple -> list -> strings -> list
+	items = list(map(str, list(args)))
+	payload = '/'.join(items)
+	return payload
+
+
+
+#
 # AESTHETICS
-# 
+#
 color_dict = {
 	'BLACK'     : '\033[1;30;48m',
 	'RED'       : '\033[1;31;48m',
@@ -179,7 +186,7 @@ logo_dict = {
 		"└─┤",
 		"└─┘" ]
 }
-	
+
 def print_progress_bar():
 	while True:
 		print(color_dict['CYAN'] + '                                            █████     ' + color_dict['END'])
@@ -202,7 +209,7 @@ def print_progress_bar():
 		yield
 		print(color_dict['CYAN'] + '                                            ████     █' + color_dict['END'])
 		yield
-	
+
 
 def print_logo(name, number=-1, color='CYAN'):
 	if number >= 0 and number < 10:
@@ -211,10 +218,5 @@ def print_logo(name, number=-1, color='CYAN'):
 	else:
 		for i in range(len(logo_dict[name])):
 			print(color_dict[color] + logo_dict[name][i] + color_dict['END'])
-	
 
-def make_payload(*args):
-	# tuple -> list -> strings -> list
-	items = list(map(str, list(args)))
-	payload = '/'.join(items)
-	return payload
+

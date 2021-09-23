@@ -44,10 +44,10 @@ import time
 
 
 def main(args):
-	
+
     payloaddir = '/app/data/payloads'
     workdir = '/app/data/workdir'
-	
+
     # Get rid of unnecessary warnings
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
@@ -58,16 +58,16 @@ def main(args):
         with tf.Session() as sess:
             facenet.load_model(args.model)
             print("Ready to infer!")
-            
+
             if args.loop == 'True':
                 copyfile(payloaddir + '/facenet/payload.jpg', args.data_dir + '/payload.jpg')
-            
+
             while True:
                 if not os.path.exists(args.data_dir + "/payload.jpg"):
                     time.sleep(0.01)
                 else:
                     t_start = time.time()
-                    
+
                     for filename in os.listdir(workdir + '/face_database/'):
                         copyfile(workdir + '/face_database/' + filename, args.data_dir + "/" + filename)
                     image_list = load_images_from_folder(args.data_dir)
@@ -102,20 +102,20 @@ def main(args):
                     for i in range(no_clusters):
                         if len(np.nonzero(labels == i)[0]) > len(np.nonzero(labels == largest_cluster)[0]):
                             largest_cluster = i
-                    
+
                     t_total = time.time() - t_start
                     print('Image inferred in: {:.5f}s'.format(t_total))
-                    
+
                     if largest_cluster > 0:
                         print('Match found! Person identified as ID: {}!'.format(largest_cluster))
                     else:
                         print('Match not found!')
                     print('')
-                    
+
                     if args.loop == 'False':
                         for filename in os.listdir(args.data_dir):
                             os.remove(args.data_dir + "/" + filename)
-                    
+
                     print('Ready to infer!')
 
 

@@ -2,7 +2,7 @@
 
 ##
 
-A collection of properly configured heterogenous machine learning applications employed as use-cases for the resource management algorithm I am developing for my bachelor thesis.
+A collection of configured heterogenous machine learning applications employed as use-cases for the resource management algorithm I am developing for my bachelor thesis.
 
 ![arch: arm32v6](arch-arm32v6-blue.svg)
 ![arch: arm32v7](arch-arm32v7-blue.svg)
@@ -44,8 +44,14 @@ Run the following command:
 
     git clone https://github.com/UphillD/edgebench && \
     cd edgebench && \
+    git submodule init && \
+    git submodule update && \
     ./launcher.sh prepare
-    
+
+or as a single line:
+
+    git clone https://github.com/UphillD/edgebench && cd edgebench && git submodule init && git submodule update && ./launcher.sh prepare
+
 ## Usage
 
 Start the launcher:

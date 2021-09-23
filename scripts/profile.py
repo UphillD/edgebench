@@ -1,4 +1,7 @@
-# edgebench/scripts/profile.py
+# Edgebench Platform
+# Helper Scripts
+# App Profiler
+#
 # Call this via the profile_wrapper.py file
 import csv
 
@@ -36,9 +39,9 @@ def get_times(app, line):
 		mins = res[:res.find('m')]
 		secs = res[res.find('m')+1:res.find('s')]
 		secs = (int(mins) * 60) + float(secs)
-	
+
 	return secs
-	
+
 # Launch the app in question, parse output, extract execution time
 def get_acet(app, cnt):
 	avgt = []
@@ -50,7 +53,7 @@ def get_acet(app, cnt):
 		lookfor = 'ACET'
 	elif app == 'retain':
 		lookfor = 'real'
-	
+
 	c = 0
 	cmd = [ './entrypoint.sh', platform, 'loop', app, str(cnt) ]
 	with Popen(cmd, stdout=PIPE, stderr=STDOUT, bufsize=1, universal_newlines=True) as proc:
@@ -119,7 +122,7 @@ if not flag:
 	for app_path in path_list:
 		if path.isdir(app_path):
 			rmtree(app_path, ignore_errors=True)
-	
+
 	# Start the other apps
 	cnt = 1
 	for i in range(1, 4):
@@ -127,29 +130,29 @@ if not flag:
 			cmd = [ './entrypoint.sh', platform, 'loop', app_dict[app][i - 1], str(cnt) ]
 			procs.append(Popen(cmd, stdout=DEVNULL, stderr=DEVNULL))
 			cnt += 1
-			
+
 	# Start the other instances of the app in question
 	for j in range(combo[0] - 1):
 		cmd = [ './entrypoint.sh', platform, 'loop', app, str(cnt) ]
 		procs.append(Popen(cmd, stdout=DEVNULL, stderr=DEVNULL))
 		cnt += 1
-	
+
 	# Wait until all apps have begun
 	for i in range(1, cnt):
-		while not path.isfile('./data/workdir/app_' + str(i) + '/exec.tmp'): 
+		while not path.isfile('./data/workdir/app_' + str(i) + '/exec.tmp'):
 			sleep(0.1)
-	
+
 	acet = get_acet(app, cnt)
 	print('Completed combo ({},{},{},{}) ({}/{}) : ACET = {}'.format(combo[0], combo[1], combo[2], combo[3], index + 1, length, acet))
-	
+
 	# Store the result
 	with open(csv_f, mode='a') as csv_file:
 		writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 		writer.writerow({
-			'index' : str(csv_idx), 
-			'app_1' : str(combo[0]), 
-			'app_2' : str(combo[1]), 
-			'app_3' : str(combo[2]), 
-			'app_4' : str(combo[3]), 
+			'index' : str(csv_idx),
+			'app_1' : str(combo[0]),
+			'app_2' : str(combo[1]),
+			'app_3' : str(combo[2]),
+			'app_4' : str(combo[3]),
 			'acet'  : str(acet)
 		})

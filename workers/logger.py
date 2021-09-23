@@ -1,17 +1,26 @@
-# edgebench
-# logger
+# Edgebench Platform
+# Worker Scripts
+# Logger Module
 #
 # Logs:
-#    1.  spawn     (spawner -> device)
-#    2.  auction   (device  -> gateway)
-#    3.  bid       (gateway -> device)
-#    4.  offload   (device  -> gateway)
-#    4a. offload_f (device)
-#    5.  final     (device/gateway custodian)
+#     ┌──────────────┬──────────────┬──────────────┬──────────────┬──────────────┐
+#     |     SGRM     |     DMRM     | Offload None | Offload  All |    Oracle    |
+# ┌───┼──────────────┼──────────────┼──────────────┼──────────────┼──────────────┤
+# | 0 | Register (g) | Register (d) |     ----     |     ----     |     ----     |
+# | 1 | Spawn    (s) | Spawn    (s) | Spawn    (s) | Spawn    (s) | Spawn    (s) |
+# | 2 | Auction  (d) | Auction  (d) |     ----     |     ----     |     ----     |
+# | 3 | Bid      (g) | Decide   (g) |     ----     |     ----     |     ----     |
+# | 4 | BidFirst (g) |     ----     |     ----     |     ----     |     ----     |
+# | 5 | Offload  (d) | Offload  (d) |     ----     | Offload  (d) | Offload  (d) |
+# | 6 | Execute  (c) | Execute  (c) | Execute  (c) | Execute  (c) | Execute  (c) |
+# └───┴──────────────┴──────────────┴──────────────┴──────────────┴──────────────┘
 #
-import csv
+#        where: s -> spawner
+#               d -> device
+#               g -> gateway
+#               c -> custodian
+
 import pandas as pd
-import pickle as pkl
 
 from numpy import nan
 from paho.mqtt import client, publish
@@ -49,7 +58,7 @@ def on_message(client, userdata, message):
 
 		rt = round(float(payload[2]), 3)
 		at = round(float(payload[3]), 3)
-		
+
 		auctioned = bool(int(payload[4]))
 
 		stat_matrix.loc[z, 'Payoff (Device)'] = u
@@ -102,7 +111,7 @@ def on_message(client, userdata, message):
 		stat_matrix.loc[z, 'Projected Duration'] = pd
 
 		stat_matrix.loc[z, 'Overdue?'] = bool((stat_matrix.loc[z, 'Receive Time (Spawn)'] + stat_matrix.loc[z, 'D']) < et)
-	
+
 	elif 'save' in topic:
 		csv_name = payload[0]
 		stat_matrix.to_csv(workdir + '/' + csv_name + '.csv')
@@ -129,7 +138,7 @@ while True:
 	print_logo('edgebench', -1, 'PURPLE')
 	print_logo('logger')
 	print('')
-	
+
 	stat_matrix = read_matrix(workdir + '/stat_matrix.pkl')
 	print(stat_matrix)
 	print('')

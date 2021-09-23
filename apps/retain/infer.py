@@ -61,7 +61,7 @@ def gru_layer(tparams, emb, name, hiddenDimSize):
 	results, updates = theano.scan(fn=stepFn, sequences=[Wx], outputs_info=T.alloc(numpy_floatX(0.0), n_samples, hiddenDimSize), non_sequences=[tparams['U_gru_'+name]], name='gru_layer', n_steps=timesteps)
 
 	return results
-	
+
 def build_model(tparams, options):
 	alphaHiddenDimSize = options['alphaHiddenDimSize']
 	betaHiddenDimSize = options['betaHiddenDimSize']
@@ -77,7 +77,7 @@ def build_model(tparams, options):
 	alpha = (T.nnet.softmax(preAlpha.T)).T
 
 	beta = T.tanh(T.dot(reverse_h_b, tparams['W_beta']) + tparams['b_beta'])
-	
+
 	return x, alpha, beta
 
 def padMatrixWithTime(seqs, times, options):
@@ -180,7 +180,7 @@ def load_data(dataFile, labelFile, timeFile):
 	test_set_y = [test_set_y[i] for i in sorted_index]
 	if len(timeFile) > 0:
 		test_set_t = [test_set_t[i] for i in sorted_index]
-	
+
 	test_set = (test_set_x, test_set_y, test_set_t)
 
 	return test_set
@@ -211,7 +211,7 @@ def train_RETAIN(
 	if len(embFile) > 0: useFixedEmb = True
 	else: useFixedEmb = False
 	options['useFixedEmb'] = useFixedEmb
-	
+
 	print 'Loading the parameters ... ',
 	params = load_params(options)
 	tparams = init_tparams(params, options)
@@ -239,7 +239,7 @@ def train_RETAIN(
 		batchX = [testSet[0][index]]
 		label = testSet[1][index]
 
-		if useTime: 
+		if useTime:
 			batchT = [testSet[2][index]]
 			x, t, lengths = padMatrixWithTime(batchX, batchT, options)
 		else:
@@ -277,7 +277,7 @@ def train_RETAIN(
 	t_total = time.time() - t_start
 	print 'processed %d patient(s)' % count
 	print 'elapsed time: %.5f sec' % t_total
-	
+
 def parse_arguments(parser):
 	parser.add_argument('model_file', type=str, metavar='<model_file>', help='The path to the Numpy-compressed file containing the model parameters.')
 	parser.add_argument('seq_file', type=str, metavar='<visit_file>', help='The path to the cPickled file containing visit information of patients')
@@ -296,11 +296,11 @@ if __name__ == '__main__':
 
 	train_RETAIN(
 		modelFile=args.model_file,
-		seqFile=args.seq_file, 
-		labelFile=args.label_file, 
-		typeFile=args.type_file, 
-		outFile=args.out_file, 
-		timeFile=args.time_file, 
+		seqFile=args.seq_file,
+		labelFile=args.label_file,
+		typeFile=args.type_file,
+		outFile=args.out_file,
+		timeFile=args.time_file,
 		useLogTime=args.use_log_time,
 		embFile=args.embed_file
 	)

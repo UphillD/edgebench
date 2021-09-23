@@ -1,13 +1,15 @@
 #!/bin/bash
-# edgebench/launcher.sh
-# Docker image launcher
+# Edgebench Platform
+# Core Launcher
+#
+# Everything begins here
 
 # Get & Set the execution platform
 # We set this in order to pull the correct docker tag
 # and pass it through to the docker container
 # (it misbehaves when checked from inside)
 case "$(uname -m)" in
-	"x86_64")	platform="amd64" ;;
+	"x86_64")	platform="amd64"   ;;
 	"aarch64")	platform="arm64v8" ;;
 	"armv7l")	platform="arm32v7" ;;
 	"armv6l")	platform="arm32v6" ;;

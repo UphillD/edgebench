@@ -1,35 +1,30 @@
-from os import chdir, system
+# Edgebench Platform
+# Worker Scripts
+# Deployer Module
+#
+# Deploys a custodian and an algorithmic module in parallel
+# Shows output of algorithmic module, suppresses custodian output
+
+from os import chdir
 from sys import argv
 from subprocess import Popen, DEVNULL
-from time import sleep
 
-module = argv[1]
-algorithm = argv[2]
-device_id = argv[3]
+# Print help message
+if len(argv) != 4:
+	print('Please provide the proper arguments!')
+	print('')
+	print('Usage: python3 deployer.py <module> <algorithm> <device ID>')
+	print('')
 
-chdir('..')
-cmd_custodian = [ './launcher.sh', 'custode', '2,2,2,2' ]
-cmd_device = [ './launcher.sh', module, algorithm, device_id ]
-Popen(cmd_custodian, stdout=DEVNULL)
-Popen(cmd_device)
+else:
+	# Grab information from arguments
+	module = argv[1]
+	algorithm = argv[2]
+	device_id = argv[3]
 
-
-
-"""
-gen = print_progress_bar()
-while True:
-	try:
-		system('clear')
-		print_logo(algorithm.lower())
-		print_logo(module, int(device_id), 'PURPLE')
-		print('')
-		print('Press CTRL+C to stop execution...')
-		print('')
-		next(gen)
-		sleep(0.3)
-	except KeyboardInterrupt:
-		system('docker kill $(docker ps -q)')
-		print('Execution concluded')
-		exit(0)
-
-"""
+	# Change dir to rootdir
+	chdir('..')
+	cmd_custodian = [ './launcher.sh', 'custode', '1,1,1,1' ]
+	cmd_device = [ './launcher.sh', module, algorithm, device_id ]
+	Popen(cmd_custodian, stdout=DEVNULL)
+	Popen(cmd_device)

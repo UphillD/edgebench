@@ -1,5 +1,7 @@
 #!/bin/bash
-# edgebench/build/build.sh
+# Edgebench Platform
+# Docker Image Builder
+#
 # Builds and pushes the docker image
 
 # Print help
@@ -7,7 +9,7 @@ if [ $# -eq 0 ]; then
 	echo "Not enough arguments!"
 	echo
 	echo "Usage:  ./build.sh <architecture>"
-	echo 
+	echo
 	echo "    architectures: amd64, arm64v8, arm32v7, arm32v6, all"
 	echo
 	exit 1;

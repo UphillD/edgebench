@@ -1,12 +1,14 @@
 #!/bin/bash
-# edgebench/apps/start.sh
+# Edgebench Platform
 # App launcher
+#
+# All apps are launched from here
 # Usage: ./start.sh <app> <app id> (default=0) <option> (loop, default="")
 
 # Source config file
 source /app/apps/settings.cfg
 
-# Grab app
+# Grab arguments
 app="$1"
 appid="$2"
 option="$3"
@@ -25,14 +27,16 @@ mkdir -p "$working"
 chmod -R 777 "$working"
 temp_f="${working}/exec.tmp"
 
-### Deepspeech
+##################
+### Deepspeech ###
+##################
 if [ "$app" = "deepspeech" ]; then
 	if [ "$platform" = "amd64" ]; then	modeltype="pbmm" ;
 	else 								modeltype="tflite" ; fi
 	model="${models}/deepspeech/deepspeech-0.9.1-models.${modeltype}"
 	input_f="${working}/payload.wav"
 	output_f="${working}/transcript.txt"
-	
+
 	if [ "$3" = "loop" ]; then cp "${payloads}/deepspeech/payload.wav" "${input_f}" ; fi
 	while sleep 0.01; do
 		if [ -f "${input_f}" ]; then
@@ -44,34 +48,40 @@ if [ "$app" = "deepspeech" ]; then
 		fi
 	done
 
-### Facenet
+###############
+### Facenet ###
+###############
 elif [ "$app" = "facenet" ]; then
 	model="${models}/facenet/"
 	input_f="${working}/"
 	output_f="${working}/"
-	
+
 	if [ "$option" = "loop" ]; then	loop="True" ;
 	else							loop="False" ; fi
-	
+
 	python3.7 infer.py "$model" "$input_f" "$output_f" "$temp_f" "$loop"
 
-### Lanenet
+###############
+### Lanenet ###
+###############
 elif [ "$app" = "lanenet" ]; then
 	model="${models}/lanenet/tusimple_lanenet.ckpt"
 	input_f="${working}/"
 	output_f="${working}/"
-	
+
 	if [ "$option" = "loop" ]; then	loop="True" ;
 	else							loop="False" ; fi
-	
+
 	python3.7 infer.py --image_dir "$input_f" --weights_path "$model" --save_dir "$output_f" --temp_file "$temp_f" --loop "$loop"
 
-### RETAIN
+##############
+### RETAIN ###
+##############
 elif [ "$app" = "retain" ]; then
 	model="${models}/retain/model.13.npz"
 	input_f="${working}/"
 	output_f="${working}/result.txt"
-	
+
 	if [ "$3" = "loop" ]; then cp "${payloads}/retain/payload.zip" "${input_f}/payload.zip" ; fi
 	while sleep 0.01; do
 		if [ -e "${input_f}/payload.zip" ]; then
@@ -83,7 +93,7 @@ elif [ "$app" = "retain" ]; then
 									"${input_f}/payload.3digitICD9.types" \
 									"$output_f" \
 									&> /dev/null
-			
+
 			if [ ! "$3" = "loop" ]; then rm -f "${input_f}/payload."* ; fi
 			rm -f "$output_f"
 			rm -f "$temp_f"

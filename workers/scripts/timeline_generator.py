@@ -1,3 +1,5 @@
+# Edgebench Platform
+#
 # Generates a task timeline
 import matplotlib.pyplot as plt
 import pickle as pkl

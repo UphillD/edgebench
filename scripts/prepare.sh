@@ -1,5 +1,8 @@
 #!/bin/bash
-# edgebench/scripts/prepare.sh
+# Edgebench Platform
+# Helper Scripts
+# Preparer
+#
 # Downloads and setups models, payloads, face database
 
 # Source config file
@@ -8,7 +11,9 @@ source /app/apps/settings.cfg
 # Print edgebench banner
 source "${scripts}/print_banner.sh" "edgebench"
 
-### URLs
+############
+### URLs ###
+############
 # Model URLs
 if [ "$platform" = "amd64" ]; then	model_deepspeech="https://dropbox.com/s/cx2z6ka4tjselyl/deepspeech_model_pbmm.zip" ;
 else								model_deepspeech="https://dropbox.com/s/u2li4rw9zceb7uk/deepspeech_model_tflite.zip"; fi
@@ -29,7 +34,9 @@ payload_all="https://dropbox.com/s/kzm1s4hcrk95l5p/payloads.zip"
 # Face Database URL
 face_db="https://dropbox.com/s/bczpwwj1vueig0c/face_database.zip"
 
-### Main Script
+###################
+### Main Script ###
+###################
 echo
 echo "Downloading pretrained models..."
 echo
@@ -70,4 +77,4 @@ echo "What device are you running this on?"
 echo "Options: rpi4, rpi4_2, rpi4_3, tegra, nano, amd64, amd64_2"
 read -p "Enter the name of the device:" device
 
-sed -i "/device_name = ''/c\device_name = '${device}'" '${algodir}/config.py'
+sed -i "/device_name = ''/c\device_name = '${device}'" "${algodir}/config.py"

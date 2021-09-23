@@ -1,6 +1,7 @@
 #!/bin/bash
-# edgebench/entrypoint.sh
-# Docker image entrypoint
+# Edgebench Platform
+# Docker Image Entrypoint
+#
 # This is (and should be) called from within the image
 
 # Grab the execution platform passed on by the launcher
@@ -9,8 +10,11 @@ platform="$1"
 # Source the config file
 source /app/apps/settings.cfg
 
-### Functions
-# Print help message
+#################
+### Functions ###
+#################
+
+# Helper
 print_help () {
 	echo
 	echo "Usage:  ./launcher.sh              for interactive menu"
@@ -29,8 +33,7 @@ print_help () {
 	echo
 }
 
-# Macro functions
-# These are called by the interactive menu
+# Interactive Menu functions
 get_app () {
 	echo "Select an app:"
 	echo "[1] deepspeech"
@@ -66,7 +69,9 @@ get_algo () {
 	esac
 }
 
-### Direct launch
+#####################
+### Direct Launch ###
+#####################
 if [ $# -gt 1 ]; then
 	case "$2" in
 	"listen")		app="$3"
@@ -114,7 +119,9 @@ if [ $# -gt 1 ]; then
 					;;
 	esac
 
-### Interactive menu
+########################
+### Interactive Menu ###
+########################
 elif [ $# -eq 1 ]; then
 	# Print edgebench banner
 	source "${scripts}/print_banner.sh" "edgebench"
@@ -138,8 +145,8 @@ elif [ $# -eq 1 ]; then
 	echo "--------------------------------------------------"
 	read -n1 -p "Enter your selection [0 - 9]:" command
 	echo
-	
 	echo
+	
 	case "$command" in
 	"1")	get_app
 			source "${appdir}/start.sh" "$app" "0"
@@ -181,5 +188,4 @@ elif [ $# -eq 1 ]; then
 			;;
 	esac
 	echo
-	
 fi

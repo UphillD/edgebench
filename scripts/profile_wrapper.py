@@ -1,4 +1,7 @@
-# edgebench/scripts/profile_wrapper.py
+# Edgebench Platform
+# Helper Scripts
+# Profiler Wrapper
+#
 # Run this from the host
 # (nohup) python3 profile_wrapper.py <app> <arch> <scale> (&)
 
@@ -6,7 +9,7 @@ from os import chdir, system
 from subprocess import Popen, PIPE, STDOUT
 from sys import argv
 
-combo_dict = { 
+combo_dict = {
 	'1' :	[
 		[1,0,0,0],
 		[1,1,0,0], [1,0,1,0], [1,0,0,1],
@@ -42,4 +45,4 @@ for index, combo in enumerate(combos):
 			line_str = line.decode('UTF-8')
 			if 'combo' in line_str:
 				print(line_str.replace('\n', ''))
-	system("docker kill $(docker ps -a | grep 'edgebench' | cut -c1-12) >/dev/null 2>&1") 
+	system("docker kill $(docker ps -a | grep 'edgebench' | cut -c1-12) >/dev/null 2>&1")

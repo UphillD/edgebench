@@ -31,7 +31,7 @@ CFG = parse_config_utils.lanenet_cfg
 
 payloaddir = '/app/data/payloads'
 workdir = '/app/data/workdir'
-	
+
 def init_args():
 	"""
 
@@ -80,24 +80,24 @@ def eval_lanenet(src_dir, weights_path, save_dir, temp_file, loop):
 	with sess.as_default():
 
 		saver.restore(sess=sess, save_path=weights_path)
-		
+
 		avgt = []
 		temp = 0.0
 		acet = 0.0
 		wcet = 0.0
 		cnt = 0
-		
+
 		print("Ready to infer.")
-		
+
 		while True:
 
 			if loop == 'True':
 				copyfile(payloaddir + '/lanenet/payload.jpg', src_dir + '/payload.jpg')
-                
+
 			if not ops.exists(src_dir + "/payload.jpg"):
 				time.sleep(0.01)
 			else:
-				
+
 				Path(temp_file).touch()
 				t_start = time.time()
 				image_list = glob.glob('{:s}/**/*.jpg'.format(src_dir), recursive=True)
@@ -125,31 +125,31 @@ def eval_lanenet(src_dir, weights_path, save_dir, temp_file, loop):
 					output_image_path = ops.join(save_dir, "output.jpg")
 
 					cv2.imwrite(output_image_path, postprocess_result['source_image'])
-					
+
 					t_total = time.time() - t_start
-					
+
 					avgt.append(t_total)
-					
+
 					cnt = cnt + 1
-					
+
 					if t_total > wcet:
 						wcet = t_total
-						
+
 					if cnt % 10 == 0:
 						acet = np.mean(avgt)
 						print('ACET: {:.3f}s, WCET: {:.3f}s'.format(acet, wcet))
 						avgt.clear()
 						wcet = 0.0
-					
+
 					print('Image inferred in: {:.3f}s'.format(t_total))
-					
+
 					if loop == 'False':
 						os.remove(image_path)
 					os.remove(output_image_path)
 					os.remove(temp_file)
-					
+
 					print("Ready to infer!")
-					
+
 
 	return
 
@@ -160,7 +160,7 @@ if __name__ == '__main__':
 	"""
 	# init args
 	args = init_args()
-	
+
 	os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 	eval_lanenet(
