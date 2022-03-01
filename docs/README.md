@@ -2,7 +2,8 @@
 
 ##
 
-A collection of configured heterogenous machine learning applications employed as use-cases for the resource management algorithm I am developing for my bachelor thesis.
+A fully dockerized, heterogenous edge computing framework, supporting a range of CPU architectures and machine learning applications. 
+Under development.
 
 ![arch: arm32v6](arch-arm32v6-blue.svg)
 ![arch: arm32v7](arch-arm32v7-blue.svg)
@@ -29,6 +30,8 @@ A collection of configured heterogenous machine learning applications employed a
 * [FaceNet](https://github.com/davidsandberg/facenet), a face recognizer using Tensorflow
 * [LaneNet](https://github.com/MaybeShewill-CV/lanenet-lane-detection), a deep neural network for real time lane detection using Tensorflow
 * [RETAIN](https://github.com/mp2893/retain), an interpretable predictive model for healthcare applications using Theano
+
+More applications can be added relatively easily by installing the prerequisites in the docker image and properly configuring the application itself and the apps/start.sh file.
 
 ## Docker Image
 
@@ -67,15 +70,16 @@ __Direct call:__ `./launcher.sh <command> <arguments>`
     $root
     ├ algo 🔒
     ├ apps
-    ├    ├ deepspeech
-    ├    ├ facenet
-    ├    ├ lanenet
-    ├    ├ retain
-    ├    └ settings.cfg
+    │    ├ deepspeech
+    │    ├ facenet
+    │    ├ lanenet
+    │    ├ retain
+    │    ├── settings.cfg
+    │    └── start.sh
     ├ build
     ├ data
-    ├    ├ payloads
-    ├    └ models
+    │    ├ payloads
+    │    └ models
     ├ docs
     ├ scripts
     └ workers

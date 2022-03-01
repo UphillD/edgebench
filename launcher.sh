@@ -1,5 +1,5 @@
 #!/bin/bash
-# Edgebench Platform
+# Edgebench Framework
 # Core Launcher
 #
 # Everything begins here
@@ -9,11 +9,11 @@
 # and pass it through to the docker container
 # (it misbehaves when checked from inside)
 case "$(uname -m)" in
-	"x86_64")	platform="amd64"   ;;
-	"aarch64")	platform="arm64v8" ;;
-	"armv7l")	platform="arm32v7" ;;
-	"armv6l")	platform="arm32v6" ;;
-	*)			echo 'Platform not found'; exit 1 ;;
+	"x86_64")   platform="amd64"   ;;
+	"aarch64")  platform="arm64v8" ;;
+	"armv7l")   platform="arm32v7" ;;
+	"armv6l")   platform="arm32v6" ;;
+	*)          echo 'Platform not found'; exit 1 ;;
 esac
 
 # Launch the docker image & pass any arguments through
@@ -36,7 +36,9 @@ esac
 #   -t:  set the image tag
 #   --entrypoint: change image entrypoint
 #
-if   [ "$#" -eq 0 ];								then docker run -it -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ;
-elif [ "$1" = "explore" ];							then docker run -it -v $PWD:/app --entrypoint /bin/sh -t uphilld/edgebench:"$platform"                  ;
-elif [ "$1" = "spawn" ] || [ "$1" = "prepare" ];	then docker run -it -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ;
-else													 docker run     -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ; fi
+# The "$@" here passes the arguments on to the docker image
+#
+if   [ "$#" -eq 0 ];                                then docker run -it -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ;
+elif [ "$1" = "explore" ];                          then docker run -it -v $PWD:/app --entrypoint /bin/sh -t uphilld/edgebench:"$platform"                  ;
+elif [ "$1" = "spawn" ] || [ "$1" = "prepare" ];    then docker run -it -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ;
+else                                                     docker run     -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ; fi

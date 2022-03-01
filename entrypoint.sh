@@ -1,5 +1,5 @@
 #!/bin/bash
-# Edgebench Platform
+# Edgebench Framework
 # Docker Image Entrypoint
 #
 # This is (and should be) called from within the image
