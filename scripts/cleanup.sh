@@ -1,7 +1,6 @@
 #!/bin/bash
 # Edgebench Platform
-# Helper Scripts
-# Cleaner
+# Cleaner Scripts
 #
 # Cleans up working directory
 

@@ -1,7 +1,6 @@
 #!/bin/bash
-# Edgebench Platform
-# Helper Scripts
-# Preparer
+# Edgebench Framework
+# Preparation Script
 #
 # Downloads and setups models, payloads, face database
 
@@ -42,30 +41,42 @@ echo "Downloading pretrained models..."
 echo
 
 for app in $apps; do
-    model="model_${app}"
-    wget -q --show-progress -O "${app}_model.zip" "${!model}" && \
-    mkdir -p "${models}/${app}" && \
-    unzip -u -qq "${app}_model.zip" -d "${models}/${app}" && \
-    rm -rf "${app}_model.zip"
+	if [ -d ${models}/${app} ]; then
+		echo "Model for ${app} app already exists."
+	else
+		model="model_${app}"
+		wget -q --show-progress -O "${app}_model.zip" "${!model}" && \
+		mkdir -p "${models}/${app}" && \
+		unzip -u -qq "${app}_model.zip" -d "${models}/${app}" && \
+		rm -rf "${app}_model.zip"
+	fi
 done
 
 echo
 echo "Downloading payloads..."
 echo
 
-wget -q --show-progress "${payload_all}" && \
-mkdir -p "${payloads}" && \
-unzip -u -qq "payloads.zip" -d "${payloads}" && \
-rm -rf "payloads.zip"
+if [ -d ${payloads} ]; then
+	echo "Payloads already downloaded."
+else
+	wget -q --show-progress "${payload_all}" && \
+	mkdir -p "${payloads}" && \
+	unzip -u -qq "payloads.zip" -d "${payloads}" && \
+	rm -rf "payloads.zip"
+fi
 
 echo
 echo "Downloading face database..."
 echo
 
-wget -q --show-progress "${face_db}" && \
-mkdir -p "${workdir}/face_database" && \
-unzip -u -qq "face_database.zip" -d "${workdir}/face_database" && \
-rm -rf "face_database.zip"
+if [ -d ${workdir}/face_database ]; then
+	echo "Face database already exists."
+else
+	wget -q --show-progress "${face_db}" && \
+	mkdir -p "${workdir}/face_database" && \
+	unzip -u -qq "face_database.zip" -d "${workdir}/face_database" && \
+	rm -rf "face_database.zip"
+fi
 
 echo
 echo "Script done!"
@@ -77,4 +88,4 @@ echo "What device are you running this on?"
 echo "Options: rpi4, rpi4_2, rpi4_3, tegra, nano, amd64, amd64_2"
 read -p "Enter the name of the device:" device
 
-sed -i "/device_name = ''/c\device_name = '${device}'" "${algodir}/config.py"
+sed -i "s/device_name = 'None'/device_name = '${device}'/g" "${algodir}/config.py"

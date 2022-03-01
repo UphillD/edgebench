@@ -40,7 +40,7 @@ get_app () {
 	echo "[2] facenet"
 	echo "[3] lanenet"
 	echo "[4] retain"
-	read -p "Enter your selection [1, 2, 3, 4]:" option
+	read -n1 -p "Enter your selection [1, 2, 3, 4]: " option
 	echo
 	case "$option" in
 		"1")	app="deepspeech" ;;
@@ -58,7 +58,7 @@ get_algo () {
 	echo "[3] Oracle"
 	echo "[4] DMRM"
 	echo "[5] SGRM"
-	read -p "Enter your selection [1, 2, 3, 4, 5]:" option
+	read -p "Enter your selection [1, 2, 3, 4, 5]: " option
 	case "$option" in
 		"1")	algorithm="OffloadNone" ;;
 		"2")	algorithm="OffloadAll" ;;
@@ -129,8 +129,8 @@ elif [ $# -eq 1 ]; then
 	#echo
 	echo "Welcome!"
 	echo "--------------------------------------------------"
-	echo "[1] Launch an App Listener"
-	echo "[2] Launch an App Listener ad nauseam"
+	echo "[1] Launch an App Listener (waits for input)"
+	echo "[2] Launch an App Looper (runs continually)"
 	echo "--------------------------------------------------"
 	echo "[3] Launch a Custodian"
 	echo "[4] Launch a Spawner"
@@ -143,7 +143,7 @@ elif [ $# -eq 1 ]; then
 	echo "[9] Prepare models, payloads & face database"
 	echo "[0] Cleanup"
 	echo "--------------------------------------------------"
-	read -n1 -p "Enter your selection [0 - 9]:" command
+	read -n1 -p "Enter your selection [0 - 9]: " command
 	echo
 	echo
 	

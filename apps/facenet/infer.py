@@ -44,7 +44,6 @@ import time
 
 
 def main(args):
-
     payloaddir = '/app/data/payloads'
     workdir = '/app/data/workdir'
 
