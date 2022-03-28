@@ -6,3 +6,5 @@ __pycache__/
 
 # logs
 *.csv
+sysmon/*.bin
+sysmon/*.csv

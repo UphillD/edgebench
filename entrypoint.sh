@@ -21,13 +21,14 @@ print_help () {
 	echo "    or  ./launcher.sh explore      for interactive shell"
 	echo "    or  ./launcher.sh <command>    for direct launch"
 	echo
-	echo "    commands: listen <app> <app id>,"
-	echo "              loop <app> <app id>,"
-	echo "              custode <combination>,"
-	echo "              spawn <num of tasks> or <algorithm> <timeline>,"
-	echo "              device <algorithm> <device id>,"
-	echo "              gateway <algorithm> <gateway id>,"
-	echo "              profile <app> <arch> <combo> <index> <length>"
+	echo "    commands: oneoff	<app> <app id>,"
+	echo "              loop	<app> <app id>,"
+	echo "				listen	<app> <app id>,"
+	echo "              custode	<combination>,"
+	echo "              spawn	<num of tasks> or <algorithm> <timeline>,"
+	echo "              device	<algorithm> <device id>,"
+	echo "              gateway	<algorithm> <gateway id>,"
+	echo "              profile	<app> <arch> <combo> <index> <length>"
 	echo "              prepare"
 	echo "              log"
 	echo
@@ -69,14 +70,94 @@ get_algo () {
 	esac
 }
 
+
+########################
+### Interactive Menu ###
+########################
+elif [ $# -eq 1 ]; then
+	# Print edgebench banner
+	source "${scripts}/print_banner.sh" "edgebench"
+	
+	#echo
+	echo "Welcome!"
+	echo "--------------------------------------------------"
+	echo "[1] Launch an App (oneoff) "
+	echo "[2] Launch an App Looper (runs continually)"
+	echo "[3] Launch an App Listener (waits for input)"
+	echo "--------------------------------------------------"
+	echo "[3] Launch a Custodian"
+	echo "[4] Launch a Spawner"
+	echo "[5] Launch a Device Module"
+	echo "[6] Launch a Gateway Module"
+	echo "[7] Launch a Logger"
+	echo "--------------------------------------------------"
+	echo "[8] Launch an App Profiler"
+	echo "--------------------------------------------------"
+	echo "[9] Prepare models, payloads & face database"
+	echo "[0] Cleanup"
+	echo "--------------------------------------------------"
+	read -n1 -p "Enter your selection [0 - 9]: " command
+	echo
+	echo
+	
+	case "$command" in
+	"2")	get_app
+			source "${appdir}/start.sh" "$app" "0" "oneoff"
+			;;
+	"2")	get_app
+			source "${appdir}/start.sh" "$app" "0" "loop"
+			;;
+	"3")	get_app
+			source "${appdir}/start.sh" "$app" "0" "listen"
+			;;
+	"3")	read -p "Enter your app combo in the form of a,b,c,d:" combination
+			python3 "${workers}/custodian.py" "$platform" "$combination"
+			;;
+	"4")	read -p "Enter the number of tasks you want to spawn:" task_number
+			python3 "${workers}/spawner.py" "$task_number"
+			;;
+	"5")	get_algo
+			read -p "Enter your device id:" device_id
+			cd "${algodir}/${algorithm}"
+			python3 "${algodir}/${algorithm}/device.py" "$device_id"
+			;;
+	"6")	get_algo
+			read -p "Enter your gateway id:" gateway_id
+			cd "${algodir}/${algorithm}"
+			python3 "${algodir}/${algorithm}/gateway.py" "$gateway_id"
+			;;
+	"7")	python3 "${workers}/logger.py"
+			;;
+	"8")	get_app
+			read -p "Enter the name of the architecture:" arch
+			read -p "Enter the app combo:" combo
+			read -p "Enter the app combo index:" index
+			read -p "Enter the total app combos:" length
+			cd scripts
+			python3 "${scripts}/profile.py" "$platform" "$app" "$arch" "$combo" "$index" "$length"
+			;;
+	"9")	source "${scripts}/prepare.sh"
+			;;
+	"0")	source "${scripts}/cleanup.sh"
+			;;
+	*)		echo "Please enter a valid selection! Exiting..."
+			;;
+	esac
+	echo
+fi
+
 #####################
 ### Direct Launch ###
 #####################
 if [ $# -gt 1 ]; then
 	case "$2" in
+	"oneoff")		app="$3"
+					id="$4"
+					source "${appdir}/start.sh" "$app" "id" "oneoff"
+					;;
 	"listen")		app="$3"
 					id="$4"
-					source "${appdir}/start.sh" "$app" "$id"
+					source "${appdir}/start.sh" "$app" "$id" "listen"
 					;;
 	"loop")			app="$3"
 					id="$4"
@@ -118,74 +199,3 @@ if [ $# -gt 1 ]; then
 					print_help
 					;;
 	esac
-
-########################
-### Interactive Menu ###
-########################
-elif [ $# -eq 1 ]; then
-	# Print edgebench banner
-	source "${scripts}/print_banner.sh" "edgebench"
-	
-	#echo
-	echo "Welcome!"
-	echo "--------------------------------------------------"
-	echo "[1] Launch an App Listener (waits for input)"
-	echo "[2] Launch an App Looper (runs continually)"
-	echo "--------------------------------------------------"
-	echo "[3] Launch a Custodian"
-	echo "[4] Launch a Spawner"
-	echo "[5] Launch a Device Module"
-	echo "[6] Launch a Gateway Module"
-	echo "[7] Launch a Logger"
-	echo "--------------------------------------------------"
-	echo "[8] Launch an App Profiler"
-	echo "--------------------------------------------------"
-	echo "[9] Prepare models, payloads & face database"
-	echo "[0] Cleanup"
-	echo "--------------------------------------------------"
-	read -n1 -p "Enter your selection [0 - 9]: " command
-	echo
-	echo
-	
-	case "$command" in
-	"1")	get_app
-			source "${appdir}/start.sh" "$app" "0"
-			;;
-	"2")	get_app
-			source "${appdir}/start.sh" "$app" "0" "loop"
-			;;
-	"3")	read -p "Enter your app combo in the form of a,b,c,d:" combination
-			python3 "${workers}/custodian.py" "$platform" "$combination"
-			;;
-	"4")	read -p "Enter the number of tasks you want to spawn:" task_number
-			python3 "${workers}/spawner.py" "$task_number"
-			;;
-	"5")	get_algo
-			read -p "Enter your device id:" device_id
-			cd "${algodir}/${algorithm}"
-			python3 "${algodir}/${algorithm}/device.py" "$device_id"
-			;;
-	"6")	get_algo
-			read -p "Enter your gateway id:" gateway_id
-			cd "${algodir}/${algorithm}"
-			python3 "${algodir}/${algorithm}/gateway.py" "$gateway_id"
-			;;
-	"7")	python3 "${workers}/logger.py"
-			;;
-	"8")	get_app
-			read -p "Enter the name of the architecture:" arch
-			read -p "Enter the app combo:" combo
-			read -p "Enter the app combo index:" index
-			read -p "Enter the total app combos:" length
-			cd scripts
-			python3 "${scripts}/profile.py" "$platform" "$app" "$arch" "$combo" "$index" "$length"
-			;;
-	"9")	source "${scripts}/prepare.sh"
-			;;
-	"0")	source "${scripts}/cleanup.sh"
-			;;
-	*)		echo "Please enter a valid selection! Exiting..."
-			;;
-	esac
-	echo
-fi

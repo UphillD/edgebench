@@ -3,7 +3,7 @@
 # App launcher
 #
 # All apps are launched from here
-# Usage: ./start.sh <app> <app id> (default=0) <option> (loop, default="")
+# Usage: ./start.sh <app> <app id> (default=0) <option> (oneoff, loop, listen)
 
 # Source config file
 source /app/apps/settings.cfg
@@ -37,12 +37,12 @@ if [ "$app" = "deepspeech" ]; then
 	input_f="${working}/payload.wav"
 	output_f="${working}/transcript.txt"
 
-	if [ "$3" = "loop" ]; then cp "${payloads}/deepspeech/payload.wav" "${input_f}" ; fi
+	if [ "$option" = "oneoff" ] || [ "$option" = "loop" ]; then cp "${payloads}/deepspeech/payload.wav" "${input_f}" ; fi
 	while sleep 0.01; do
 		if [ -f "${input_f}" ]; then
 			touch "$temp_f"
 			time deepspeech --model "$model" --audio "$input_f" >> "$output_f"
-			if [ ! "$3" = "loop" ]; then rm -f "${input_f}" ; fi
+			if [ ! "$option" = "loop" ]; then rm -f "${input_f}" ; fi
 			rm -f "${output_f}"
 			rm -f "${temp_f}"
 		fi
@@ -82,9 +82,9 @@ elif [ "$app" = "retain" ]; then
 	input_f="${working}/"
 	output_f="${working}/result.txt"
 
-	if [ "$3" = "loop" ]; then cp "${payloads}/retain/payload.zip" "${input_f}/payload.zip" ; fi
+	if [ "$option" = "oneoff" ] || [ "$option" = "loop" ]; then cp "${payloads}/retain/payload.zip" "${input_f}/payload.zip" ; fi
 	while sleep 0.01; do
-		if [ -e "${input_f}/payload.zip" ]; then
+		if [ -f "${input_f}/payload.zip" ]; then
 			touch "$temp_f"
 			unzip -u -qq "${input_f}/payload.zip" -d "${input_f}/"
 			time python2.7 infer.py "$model" \
@@ -94,7 +94,7 @@ elif [ "$app" = "retain" ]; then
 									"$output_f" \
 									&> /dev/null
 
-			if [ ! "$3" = "loop" ]; then rm -f "${input_f}/payload."* ; fi
+			if [ ! "$option" = "loop" ]; then rm -f "${input_f}/payload."* ; fi
 			rm -f "$output_f"
 			rm -f "$temp_f"
 		fi

@@ -22,13 +22,14 @@ esac
 #      no arguments -> interactive menu
 #   or explore      -> launch shell
 #   or call directly:
-#        listen <app> <app id>
-#        loop <app> <app id>
-#        custodian <app combination>
-#        spawner <number of tasks> or <algorithm> <timeline>
-#        device <algorithm> <device id>
-#        gateway <algorithm> <gateway id>
-#        profile <app> <arch> <combo> <index> <length>
+#        oneoff		<app> <app id>
+#        loop		<app> <app id>
+#        listen		<app> <app id>
+#        custodian	<app combination>
+#        spawner	<number of tasks> or <algorithm> <timeline>
+#        device		<algorithm> <device id>
+#        gateway	<algorithm> <gateway id>
+#        profile	<app> <arch> <combo> <index> <length>
 #
 # Parameters:
 #   -it: make the shell interactive
@@ -38,7 +39,13 @@ esac
 #
 # The "$@" here passes the arguments on to the docker image
 #
-if   [ "$#" -eq 0 ];                                then docker run -it -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ;
-elif [ "$1" = "explore" ];                          then docker run -it -v $PWD:/app --entrypoint /bin/sh -t uphilld/edgebench:"$platform"                  ;
-elif [ "$1" = "spawn" ] || [ "$1" = "prepare" ];    then docker run -it -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ;
-else                                                     docker run     -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ; fi
+#if   [ "$#" -eq 0 ];                                then docker run -it -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ;
+#elif [ "$1" = "explore" ];                          then docker run -it -v $PWD:/app --entrypoint /bin/sh -t uphilld/edgebench:"$platform"                  ;
+#elif [ "$1" = "spawn" ] || [ "$1" = "prepare" ];    then docker run -it -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ;
+#else                                                     docker run     -v $PWD:/app                      -t uphilld/edgebench:"$platform" "$platform" "$@" ; fi
+
+# Trying something new
+if	[ "$1" = "explore" ]; then	arg="--entrypoint /bin/bash"	;
+else							arg=""							;	fi
+
+docker run -it -v $PWD:/app $arg -t uphilld/edgebench:"$platform" $platform "$@"
