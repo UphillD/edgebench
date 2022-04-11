@@ -74,7 +74,7 @@ get_algo () {
 ########################
 ### Interactive Menu ###
 ########################
-elif [ $# -eq 1 ]; then
+if [ $# -eq 1 ]; then
 	# Print edgebench banner
 	source "${scripts}/print_banner.sh" "edgebench"
 	
@@ -85,11 +85,11 @@ elif [ $# -eq 1 ]; then
 	echo "[2] Launch an App Looper (runs continually)"
 	echo "[3] Launch an App Listener (waits for input)"
 	echo "--------------------------------------------------"
-	echo "[3] Launch a Custodian"
-	echo "[4] Launch a Spawner"
-	echo "[5] Launch a Device Module"
-	echo "[6] Launch a Gateway Module"
-	echo "[7] Launch a Logger"
+	echo "[4] Launch a Custodian"
+	echo "[5] Launch a Spawner"
+	echo "[6] Launch a Device Module"
+	echo "[7] Launch a Gateway Module"
+	echo "[8] Launch a Logger"
 	echo "--------------------------------------------------"
 	echo "[8] Launch an App Profiler"
 	echo "--------------------------------------------------"
@@ -101,7 +101,7 @@ elif [ $# -eq 1 ]; then
 	echo
 	
 	case "$command" in
-	"2")	get_app
+	"1")	get_app
 			source "${appdir}/start.sh" "$app" "0" "oneoff"
 			;;
 	"2")	get_app
@@ -110,18 +110,18 @@ elif [ $# -eq 1 ]; then
 	"3")	get_app
 			source "${appdir}/start.sh" "$app" "0" "listen"
 			;;
-	"3")	read -p "Enter your app combo in the form of a,b,c,d:" combination
+	"4")	read -p "Enter your app combo in the form of a,b,c,d:" combination
 			python3 "${workers}/custodian.py" "$platform" "$combination"
 			;;
-	"4")	read -p "Enter the number of tasks you want to spawn:" task_number
+	"5")	read -p "Enter the number of tasks you want to spawn:" task_number
 			python3 "${workers}/spawner.py" "$task_number"
 			;;
-	"5")	get_algo
+	"6")	get_algo
 			read -p "Enter your device id:" device_id
 			cd "${algodir}/${algorithm}"
 			python3 "${algodir}/${algorithm}/device.py" "$device_id"
 			;;
-	"6")	get_algo
+	"7")	get_algo
 			read -p "Enter your gateway id:" gateway_id
 			cd "${algodir}/${algorithm}"
 			python3 "${algodir}/${algorithm}/gateway.py" "$gateway_id"
@@ -144,12 +144,11 @@ elif [ $# -eq 1 ]; then
 			;;
 	esac
 	echo
-fi
 
 #####################
 ### Direct Launch ###
 #####################
-if [ $# -gt 1 ]; then
+elif [ $# -gt 1 ]; then
 	case "$2" in
 	"oneoff")		app="$3"
 					id="$4"
@@ -199,3 +198,4 @@ if [ $# -gt 1 ]; then
 					print_help
 					;;
 	esac
+fi

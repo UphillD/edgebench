@@ -1,5 +1,5 @@
 #!/bin/bash
-# Edgebench Platform
+# Edgebench Framework
 # App launcher
 #
 # All apps are launched from here

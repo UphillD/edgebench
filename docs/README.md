@@ -2,8 +2,9 @@
 
 ##
 
+⚒️ Under development ⚒️
+
 A fully dockerized, heterogenous edge computing framework, supporting a range of CPU architectures and machine learning applications. 
-Under development.
 
 ![arch: arm32v6](arch-arm32v6-blue.svg)
 ![arch: arm32v7](arch-arm32v7-blue.svg)
